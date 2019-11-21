@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # lianzheng_web
 
 > 渝高廉政系统前端
@@ -28,3 +29,7 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# YugaoLianzhengWeb
+廉政系统前端代码
+>>>>>>> 0c80ec5c6bcb31e803646738e3d36ad630b6c5d5
