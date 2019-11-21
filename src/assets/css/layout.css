@@ -1,0 +1,39 @@
+.layout{
+  height: 100%;
+  background: url("../img/bg_顶部.png"),url('../img/bg_底部.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+}
+
+.layout-container{
+  height: 100%;
+  width: 100%;
+}
+
+.layout-header{
+  height: 200px;
+  width: 100%;
+  position: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.layout-header-top{
+  height: 100%;
+  margin-left: 380px;
+  display:flex;
+  align-items: center;
+}
+
+.layout-header-top .logo{
+  vertical-align: center;
+  width: 250px;
+}
+
+.layout-header-top .name{
+  color: #ee2235;
+  font-size: 35px;
+  vertical-align: center;
+  margin-left: 5px;
+}
