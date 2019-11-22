@@ -13,6 +13,9 @@ Vue.use(Loading.directive);
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/container.css'
+import 'element-ui/lib/theme-chalk/header.css'
+import 'element-ui/lib/theme-chalk/main.css'
 Vue.use(ElementUI)
 
 import Echarts from 'echarts'

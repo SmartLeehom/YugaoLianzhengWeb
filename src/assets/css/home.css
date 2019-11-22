@@ -1,0 +1,33 @@
+.home{
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.left-panel{
+  height: 100%;
+  width: 60%;
+}
+
+.right-panel{
+  height: 100%;
+  width: 40%;
+}
+
+.dongtai{
+  border-left-color: #ee2235;
+  border-left-width: 4px;
+  border-left-style: solid;
+  width: 100%;
+  height: 24px;
+  padding-left: 15px;
+
+  display:flex;
+  align-items: center;
+}
+
+.title{
+  font-size: 21px;
+  color: #ee2235;
+  line-height: 24px;
+}

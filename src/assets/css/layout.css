@@ -4,36 +4,88 @@
   background-repeat: no-repeat;
   background-size: 100% 100%;
   -moz-background-size: 100% 100%;
+  padding-left: 380px;
+  padding-right: 360px;
 }
 
-.layout-container{
-  height: 100%;
-  width: 100%;
+.mainpage{
+  height: 80%;
 }
 
 .layout-header{
-  height: 200px;
+  height: 223px;
   width: 100%;
   position: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 .layout-header-top{
-  height: 100%;
-  margin-left: 380px;
+  height: 60%;
   display:flex;
   align-items: center;
 }
 
 .layout-header-top .logo{
   vertical-align: center;
-  width: 250px;
+  width: 210px;
 }
 
-.layout-header-top .name{
-  color: #ee2235;
-  font-size: 35px;
+.layout-header-top .title{
+  color: #dd1519;
+  font-weight: 500;
+  font-size: 25pt;
   vertical-align: center;
-  margin-left: 5px;
+  margin-left: 15px;
+  font-family: "Microsoft YaHei";
+}
+
+.layout-header-menu{
+  height: 1%;
+  margin-top: 5px;
+  width: 100%;
+  display:flex;
+  align-items: center;
+
+}
+
+.top-menu{
+  width: 100%;
+}
+
+.top-menu-item{
+  font-size: 17pt;
+  width: 193px;
+  text-align: center;
+}
+
+.selected{
+  font-weight: bold;
+}
+
+.el-menu-item:hover{
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.el-menu.el-menu--horizontal {
+  border-top: solid 1px rgba(82,83,86,0.1);
+  border-bottom: 0;
+}
+
+.el-menu--horizontal>.el-menu-item.is-active {
+  border-top: 2px solid #ed0909;
+  border-bottom-color: rgba(0, 0, 0, 0) !important;
+  color: #ed0909;
+}
+
+.userlogo{
+  width:40px; border-radius:50%;
+}
+
+.username{
+  width: 200px;
+  color: rgb(168, 35, 35);
+  margin-left: 15px;
+}
+
+.operate-list{
+  list-style-type: none;
 }

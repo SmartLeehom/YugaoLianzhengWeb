@@ -18,6 +18,30 @@ export default new Router({
                     },
                     component: resolve => require(['./views/home/index.vue'], resolve),
                 },
+              {
+                path: '/',
+                name: 'reference',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/home/index.vue'], resolve),
+              },
+              {
+                path: '/',
+                name: 'management',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/home/index.vue'], resolve),
+              },
+              {
+                path: '/',
+                name: 'report',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/home/index.vue'], resolve),
+              },
             ]
         },
         /*{
