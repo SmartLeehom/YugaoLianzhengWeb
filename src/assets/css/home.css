@@ -14,12 +14,15 @@
   width: 40%;
 }
 
+.left-top-div{
+}
+
 .dongtai{
   border-left-color: #ee2235;
   border-left-width: 4px;
   border-left-style: solid;
   width: 100%;
-  height: 24px;
+  height: 20px;
   padding-left: 15px;
 
   display:flex;
@@ -31,3 +34,233 @@
   color: #ee2235;
   line-height: 24px;
 }
+
+.ringt-more{
+  font-size: 14px;
+  color: #ee2235;
+  text-align: right;
+  width: 70%;
+  cursor: pointer;
+}
+
+.left-more{
+  font-size: 14px;
+  color: #ee2235;
+  text-align: right;
+  width: 80%;
+  cursor: pointer;
+}
+
+.show-dongtai-info{
+  margin-top: 21px;
+  width: 95%;
+  height: 250px;
+  cursor: pointer;
+}
+
+.show-dongtai-info .main-img-panel{
+  width: 83%;
+  height: 100%;
+  float: left;
+  margin-right: 12px;
+}
+
+.show-dongtai-info .avatar-list{
+  width: 15%;
+  height: 100%;
+  float: left;
+}
+
+.main-img-panel{
+  background-size: cover;
+  vertical-align: bottom;
+  position:relative;
+}
+
+.main-img-panel .dongtai-title-div{
+  background-color: #ed0909;
+  opacity: 0.2;
+  width: 99%;
+  padding-left: 1%;
+  position:absolute;
+  bottom: 0px;
+  vertical-align: center;
+}
+
+.dongtai-title{
+  color: white;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+  padding-left: 20px;
+}
+
+.active{
+  /*border:#ed0909 solid 1px;*/
+}
+
+.left-bottom-div{
+  margin-top: 50px;
+  height: 40%;
+}
+
+.lianzheng-reference{
+  width: 47%;
+  float: left;
+  margin-right: 2%;
+  height: 100%;
+}
+
+.reference-module{
+  width: 47%;
+  float: left;
+  height: 100%;
+}
+
+.left-bottom-more{
+  font-size: 14px;
+  color: #ee2235;
+  text-align: right;
+  width: 65%;
+  cursor: pointer;
+}
+
+.unReadDot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 16px;
+  background-color: #4ecbff;
+  border: #4ecbff 1px solid;
+}
+
+.reference-box{
+  display:flex;
+  align-items: center;
+  margin-top: 21px;
+  border-bottom: darkgrey 1px dashed;
+  padding-bottom: 6px;
+}
+
+.download-reference{
+  background-image: url("../../assets/img/1_07.png");
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.readDot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 16px;
+  border: darkgrey 1px solid;
+  background-color: white;
+}
+
+.reference_title {
+  flex: 1;
+  font-size: 16px;
+  font-weight: normal;
+  font-family: "Microsoft YaHei";
+  color: #828386;
+}
+
+.waiting2DoReadDot{
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 16px;
+  border: darkgrey 1px solid;
+  background-color: #ff912f;
+}
+
+.reference-waiting-do-title{
+  color: #5f6166;
+}
+
+.right-panel-box{
+  margin-top: 21px;
+  width: 95%;
+  cursor: pointer;
+}
+
+.analysis-box{
+  margin-top: 32px;
+  height: 180px;
+}
+
+.contact-box{
+  margin-top: 32px;
+}
+
+.tel-box{
+  background-image: url("../../assets/img/1_03.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  padding-left: 40px;
+  margin-top: 21px;
+}
+
+.email-box{
+  background-image: url("../../assets/img/1_09.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  padding-left: 40px;
+  margin-top: 21px;
+}
+
+.addr-box{
+  background-image: url("../../assets/img/1_12.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  padding-left: 40px;
+  margin-top: 21px;
+}
+
+.contact-title{
+  font-size: 16px;
+  color: #36373b;
+  margin-right: 10px;
+}
+
+.contact-value{
+  font-size: 16px;
+  color: #828386;
+}
+
+.left-analysis{
+  text-align: center;
+  width: 215px;
+  float: left;
+  border: 1px lightgrey solid;
+  height: 60px;
+  vertical-align: center;
+}
+
+.right-analysis{
+  text-align: center;
+  float: right;
+  width: 215px;
+  border: 1px lightgrey solid;
+  height: 60px;
+  vertical-align: center;
+}
+
+.analysis-value{
+  font-size: 22px;
+  color: #fa8e1a;
+  height: 50%;
+  vertical-align: center;
+}
+
+.analysis-title{
+  font-size: 16px;
+  color: #828386;
+  margin-right: 10px;
+  height: 50%;
+  vertical-align: center;
+}
+
+

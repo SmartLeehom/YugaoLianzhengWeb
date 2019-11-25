@@ -103,7 +103,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-right: 750px;
+    margin-right: 720px;
     width: 150px;
 
     .arrow {
