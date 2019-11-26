@@ -82,7 +82,7 @@
       <div class="analysis-box">
         <div class="dongtai">
           <span class="title">廉政分析</span>
-          <span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>
+          <!--<span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>-->
         </div>
 
         <div class="right-panel-box">
@@ -112,7 +112,7 @@
       <div class="contact-box">
         <div class="dongtai">
           <span class="title">廉政信箱</span>
-          <span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>
+          <!--<span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>-->
         </div>
 
         <div class="right-panel-box">

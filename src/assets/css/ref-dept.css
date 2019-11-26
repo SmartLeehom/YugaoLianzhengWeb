@@ -1,0 +1,57 @@
+.reference-department-header{
+  background-image: url("../../assets/img/1_12.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  height: 28px;
+  padding-left: 45px;
+}
+
+.reference-department-title{
+  color: #ed0909;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+  font-weight: bold;
+}
+
+.reference-department-query{
+  margin-top: 21px;
+}
+
+.query-title{
+  color: #828386;
+  font-family: "Microsoft YaHei";
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.el-input__inner{
+  height: 30px;
+  line-height: 30px;
+}
+
+.el-input__icon{
+  line-height: 30px;
+}
+
+.input-text{
+  height: 26px;
+  font-size: 14px;
+  border-color: lightgrey;
+  outline: 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+  outline-style: none;
+}
+
+.submit-btn{
+  width: 80px;
+  font-size: 14px;
+  font-weight: bold;
+  height: 35px;
+  background-color: #ed0909;
+}
+
+.reference-department-list{
+  margin-top: 21px;
+}

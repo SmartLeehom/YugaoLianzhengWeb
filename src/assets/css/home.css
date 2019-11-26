@@ -6,12 +6,12 @@
 
 .left-panel{
   height: 100%;
-  width: 60%;
+  width: 65%;
 }
 
 .right-panel{
   height: 100%;
-  width: 40%;
+  width: 35%;
 }
 
 .left-top-div{
@@ -39,7 +39,7 @@
   font-size: 14px;
   color: #ee2235;
   text-align: right;
-  width: 70%;
+  width: 65%;
   cursor: pointer;
 }
 
@@ -232,20 +232,22 @@
 
 .left-analysis{
   text-align: center;
-  width: 215px;
+  width: 180px;
   float: left;
   border: 1px lightgrey solid;
   height: 60px;
   vertical-align: center;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 
 .right-analysis{
   text-align: center;
   float: right;
-  width: 215px;
+  width: 180px;
   border: 1px lightgrey solid;
   height: 60px;
   vertical-align: center;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 
 .analysis-value{
