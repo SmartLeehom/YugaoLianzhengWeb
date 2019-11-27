@@ -64,7 +64,7 @@ export default new Router({
                     meta: {
                       requireAuth: true
                     },
-                    component: resolve => require(['./views/pages/reference/dept.vue'], resolve),
+                    component: resolve => require(['./views/pages/reference/refAnalysis.vue'], resolve),
                   },
                   {
                     path: '/refmodule',
@@ -72,7 +72,7 @@ export default new Router({
                     meta: {
                       requireAuth: true
                     },
-                    component: resolve => require(['./views/pages/reference/dept.vue'], resolve),
+                    component: resolve => require(['./views/pages/reference/refmodule.vue'], resolve),
                   }
                 ]
               },
@@ -85,12 +85,20 @@ export default new Router({
                 component: resolve => require(['./views/home/index.vue'], resolve),
               },
               {
-                path: '/',
+                path: '/report',
                 name: 'report',
                 meta: {
                   requireAuth: true
                 },
-                component: resolve => require(['./views/home/index.vue'], resolve),
+                component: resolve => require(['./views/pages/report/index.vue'], resolve),
+              },
+              {
+                path: '/dongtai',
+                name: 'dongtai',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/pages/dongtai/index.vue'], resolve),
               },
             ]
         },
