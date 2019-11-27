@@ -73,7 +73,7 @@
           <div class="reference-box" v-for="(item_f1, index_f1) in lzWait2Do" :key="index_f1" @click="lookReference(item_f1)">
             <span class="waiting2DoReadDot"></span>
             <h3 class="reference_title reference-waiting-do-title">
-              {{ item_f1.title }}
+              {{ item_f1.remarks }}
             </h3>
           </div>
         </div>
@@ -193,6 +193,9 @@
             },
             //廉政动态
             getPhoto(){
+            //   this.$api.get('/dongtai/findList?page=1&size=4',null,res=>{
+            //   this.photos=res.list
+            // })
                 this.photos = [
                     require('../../assets/img/bg_顶部.png'),
                     require('../../assets/img/bg_底部.png'),
@@ -202,13 +205,16 @@
             },
             //廉政资料
             getReferences(){
-                this.lzReferences = [
-                    {title:"廉政资料1", isRead: true},
-                    {title:"廉政资料2", isRead: false},
-                    {title:"廉政资料3", isRead: true},
-                    {title:"廉政资料4", isRead: false},
-                    {title:"廉政资料5", isRead: true}
-                ]
+              this.$api.get('reference/findList?type=0&page=1&size=5',null,res=>{
+              this.lzReferences=res.list
+            })
+                // this.lzReferences = [
+                //     {title:"廉政资料1", isRead: true},
+                //     {title:"廉政资料2", isRead: false},
+                //     {title:"廉政资料3", isRead: true},
+                //     {title:"廉政资料4", isRead: false},
+                //     {title:"廉政资料5", isRead: true}
+                // ]
             },
             //资料模板
             getReferenceModule(){
@@ -225,12 +231,15 @@
             },
             // 待办、待阅事项
             getWait2Do(){
-                this.lzWait2Do = [
-                    {title:"待办事项1", isRead: true},
-                    {title:"待阅事项1", isRead: false},
-                    {title:"待办事项2", isRead: true},
-                    {title:"待阅事项2", isRead: false}
-                ]
+                this.$api.get('undo/findList?page=1&size=4',null,res=>{
+                this.lzWait2Do=res.list
+              })
+                // this.lzWait2Do = [
+                //     {title:"待办事项1", isRead: true},
+                //     {title:"待阅事项1", isRead: false},
+                //     {title:"待办事项2", isRead: true},
+                //     {title:"待阅事项2", isRead: false}
+                // ]
             },
             // 廉政分析
             getAnalysis(){

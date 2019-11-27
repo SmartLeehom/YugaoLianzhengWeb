@@ -12,7 +12,7 @@
 
       <span class="query-title">资料类型</span>
       <el-select v-model="refTypes.key" style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
-        <el-option v-for="item in refTypes" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+        <el-option v-for="item in refTypes" :key="item.lianzhengReferenceTypeId" :label="item.name" :value="item.lianzhengReferenceTypeId"> </el-option>
       </el-select>
 
       <span class="query-title">关键词</span>
@@ -24,13 +24,13 @@
 
     <div class="reference-department-list">
       <el-table :data="refData" class="table-wrap" style="width: 100%">
-        <el-table-column prop="typeName" label="资料类型" width="200px">
+        <el-table-column prop="type" label="资料类型" width="200px">
         </el-table-column>
         <el-table-column prop="title" label="资料名称" width="220px">
         </el-table-column>
         <el-table-column prop="projectName" label="项目" width="140px">
         </el-table-column>
-        <el-table-column prop="createdByName" label="上传人" width="100px">
+        <el-table-column prop="createdBy" label="上传人" width="100px">
         </el-table-column>
         <el-table-column prop="createdAt" label="上传时间" width="140px">
         </el-table-column>
@@ -97,10 +97,13 @@
                 ]
             },
             getRefTypes(){
-                this.refTypes = [
-                    {key: 4, value: "廉政交底现场照片"},
-                    {key: 5, value: "廉政告知函"},
-                ]
+                this.$api.get('referenceFileType/findList?referenceTypeId=1',null,res=>{
+                this.refTypes=res.list
+              })
+                // this.refTypes = [
+                //     {key: 4, value: "廉政交底现场照片"},
+                //     {key: 5, value: "廉政告知函"},
+                // ]
             },
             projectChanges(val){
                 // val为key
@@ -122,10 +125,16 @@
                 })
             },
             getRefData(){
-                this.refData=[
-                    {lianzhengReferenceId: 1, typeName: "廉政专题教育会图文资料", title: "廉政资料1", projectName: "项目1", createdByName: "张三", createdAt: "2019-11-26"}
-                ]
-                this.totalPage = 1
+              this.$api.get('reference/findList?type=0&page=1&size=10',null,res=>{
+              this.refData=res.list;
+              this.pageIndex=res.pagebar.page;
+              this.totalSize=res.pagebar.size;
+              this.totalPage=res.pagebar.total;
+              })
+                // this.refData=[
+                //     {lianzhengReferenceId: 1, typeName: "廉政专题教育会图文资料", title: "廉政资料1", projectName: "项目1", createdByName: "张三", createdAt: "2019-11-26"}
+                // ]
+                // this.totalPage = 1
             },
             viewDetail(id, title){
                 this.$router.push({
