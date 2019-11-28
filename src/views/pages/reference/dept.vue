@@ -7,7 +7,7 @@
     <div class="reference-department-query">
       <span class="query-title">部门</span>
       <el-select v-model="depts.key" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择">
-        <el-option v-for="item in depts" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+        <el-option v-for="item in depts" :key="item.fid" :label="item.fname" :value="item.fid"> </el-option>
       </el-select>
 
       <span class="query-title">资料类型</span>
@@ -28,9 +28,9 @@
         </el-table-column>
         <el-table-column prop="title" label="资料名称" width="220px">
         </el-table-column>
-        <el-table-column prop="department" label="部门" width="140px">
+        <el-table-column prop="departmentName" label="部门" width="140px">
         </el-table-column>
-        <el-table-column prop="createdBy" label="上传人" width="100px">
+        <el-table-column prop="createdByName" label="上传人" width="100px">
         </el-table-column>
         <el-table-column prop="createdAt" label="上传时间" width="140px">
         </el-table-column>
@@ -90,11 +90,14 @@
         },
         methods: {
             getDepts(){
-                this.depts=[
-                    {key: 1, value: "一部"},
-                    {key: 2, value: "二部"},
-                    {key: 3, value: "三部"},
-                ]
+              this.$api.get('org/list',null,res=>{
+              this.depts=res.data
+            })
+                // this.depts=[
+                //     {key: 1, value: "一部"},
+                //     {key: 2, value: "二部"},
+                //     {key: 3, value: "三部"},
+                // ]
             },
             getRefTypes(){
               this.$api.get('referenceFileType/findList?referenceTypeId=1',null,res=>{
@@ -118,6 +121,12 @@
 
             queryRefList(){
                 console.log(this.selectedDept + '--' + this.selectedReftype + '--' + this.keyPattern);
+                this.$api.get('reference/findList?type=0&page=1&size=10&pattern='+this.keyPattern,null,res=>{
+                this.refData=res.list;
+                this.pageIndex=res.pagebar.page;
+                this.totalSize=res.pagebar.size;
+                this.totalPage=res.pagebar.total;
+              })
             },
             addRef(){
                 this.$router.push({
@@ -151,7 +160,7 @@
             },
             deleteRef(id){
                 console.log(id);
-                this.$api.post('reference/delete',id,res=>{
+                this.$api.post('reference/delete?id='+id,null,res=>{
               })
             },
             sizeChangeHandle(val) {

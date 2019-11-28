@@ -7,12 +7,12 @@
     <div class="reference-department-query">
       <span class="query-title">所属部门</span>
       <el-select v-model="selectedDept" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择" :disabled="!isEdit">
-        <el-option v-for="item in depts" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+        <el-option v-for="item in depts" :key="item.fid" :label="item.fname" :value="item.fid"> </el-option>
       </el-select>
 
       <span class="query-title">资料类型</span>
       <el-select v-model="selectedReftype" style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择" :disabled="!isEdit">
-        <el-option v-for="item in refTypes" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+        <el-option v-for="item in refTypes" :key="item.lianzhengReferenceFileTypeId" :label="item.name" :value="item.lianzhengReferenceFileTypeId"> </el-option>
       </el-select>
 
         <span v-if="!isEdit" class="query-title" style="margin-right: 18px; margin-left: 5px">上传人</span><span v-if="!isEdit" class="query-title" style="margin-right: 30px; font-size: 16px; color: #36373b">{{createdByName}}</span>
@@ -72,9 +72,10 @@
                 depts: [],
                 refTypes: [],
                 selectedDept: '',
+                selectedDeptName: '',
                 selectedReftype: '',
-                refName: '廉政资料1',
-                content: '廉政资料说明1',
+                refName: '',
+                content: '',
                 createdByName: '',
                 createdAt: '',
                 constNone: 'none',
@@ -90,23 +91,30 @@
         },
         methods:{
             getDepts(){
-                this.depts=[
-                    {key: 1, value: "一部"},
-                    {key: 2, value: "二部"},
-                    {key: 3, value: "三部"},
-                ]
+              this.$api.get('org/list',null,res=>{
+              this.depts=res.data
+            })
+                // this.depts=[
+                //     {key: 1, value: "一部"},
+                //     {key: 2, value: "二部"},
+                //     {key: 3, value: "三部"},
+                // ]
             },
             getRefTypes(){
-                this.refTypes = [
-                    {key: 1, value: "廉政专题教育会图文资料"},
-                    {key: 2, value: "廉政约谈图文资料"},
-                    {key: 3, value: "廉洁从业承诺书"}
-                ]
+              this.$api.get('referenceFileType/findList?referenceTypeId=1',null,res=>{
+              this.refTypes=res.list
+            })
+                // this.refTypes = [
+                //     {key: 1, value: "廉政专题教育会图文资料"},
+                //     {key: 2, value: "廉政约谈图文资料"},
+                //     {key: 3, value: "廉洁从业承诺书"}
+                // ]
             },
             deptChanges(val){
                 // val为key
                 console.log(val);
                 this.selectedDept = val;
+                this.selectedDeptName = "";
             },
             reftypeChanges(val){
                 console.log(val);
@@ -131,7 +139,19 @@
             },
             save(){
                 // 保存数据
-
+                var obj = {
+                          	"title":this.refName,
+                          	"type":this.selectedReftype,
+                          	"departmentId":this.selectedDept,
+                            "departmentName":this.selectedDeptName,
+                          	"project":"",
+                          	"projectName":"",
+                          	"content":this.content,
+                            "createdById":this.createdByName,
+                          	"createdByName":this.createdByName,
+                          	"createdAt":this.createdAt
+                          };
+                this.$api.post('reference/addOrUpdate',obj,res=>{})
                 history.go(-1);
             },
             cancel(){
