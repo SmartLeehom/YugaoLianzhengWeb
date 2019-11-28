@@ -56,7 +56,7 @@
     </div>
 
     <div style="position: fixed; bottom: 120px; left: 50%;">
-      <el-button type="danger" class="submit-btn" @click="save()">保存</el-button>
+      <el-button type="danger" class="submit-btn" @click="save()" v-if="isEdit">保存</el-button>
       <el-button type="danger" class="submit-btn"@click="cancel()">返回</el-button>
     </div>
   </div>
@@ -78,9 +78,11 @@
                 createdByName: '',
                 createdAt: '',
                 constNone: 'none',
+                returnBack: -1,
             }
         },
         mounted(){
+            this.returnBack = this.$route.params.returnBack ? this.$route.params.returnBack : -1;
             this.getDepts()
             this.getRefTypes()
             if(this.$route.params.id){
@@ -121,10 +123,10 @@
             },
             save(){
                 // 保存数据
-                history.go(-1);
+                history.go(this.returnBack);
             },
             cancel(){
-                history.go(-1);
+                history.go(this.returnBack);
             },
 
             //附件相关

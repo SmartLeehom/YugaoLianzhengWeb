@@ -4,7 +4,7 @@
       <span class="reference-department-title">廉政动态</span>
     </div>
     <div class="reference-module-table">
-      <div class="reference-module-item-box" style="height: 540px; overflow: scroll">
+      <div class="reference-module-item-box" style="max-height: 540px; overflow: scroll">
         <div class="reference-module-item" v-for="(item_f1, index_f1) in moduleData" :key="index_f1" @click="showdetail(item_f1)">
           <div class="reference-module-item-img">
             <img class="avatar-img" :src="item_f1.img" />
@@ -59,11 +59,6 @@
                     {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
                     {id:1, img: require('../../../assets/img/bg_底部.png'), title: '动态2', content: '789022', createdAt: '2019-1-1'},
                     {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_底部.png'), title: '动态2', content: '789022', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_底部.png'), title: '动态2', content: '789022', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_底部.png'), title: '动态2', content: '789022', createdAt: '2019-1-1'}
                 ]
             },
             sizeChangeHandle(val) {

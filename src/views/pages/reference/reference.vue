@@ -58,9 +58,33 @@
             }
         },
         mounted(){
-            this.$router.push({
-                name: this.iframeUrl
-            })
+            if(this.$route.params.route){
+                this.iframeUrl = this.$route.params.route
+                this.$router.push({
+                    name: this.$route.params.route
+                })
+            }
+            else if(this.$route.params.id && this.$route.params.type){
+                if(["1","2"].indexOf(this.$route.params.type.toString()) >= 0){
+                    this.iframeUrl = 'dept'
+                    this.$router.push({
+                        name: 'refDeptDetail',
+                        params:{id: this.$route.params.id, type: "集团与部门资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
+                    })
+                }
+                else{
+                    this.iframeUrl = 'project'
+                    this.$router.push({
+                        name: 'refProjDetail',
+                        params:{id: this.$route.params.id, type: "工程项目资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
+                    })
+                }
+            }
+            else{
+                this.$router.push({
+                    name: this.iframeUrl
+                })
+            }
         },
         methods:{
             handleSelect(key, keyPath) {

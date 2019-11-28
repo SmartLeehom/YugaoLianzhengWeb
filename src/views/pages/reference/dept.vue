@@ -23,7 +23,7 @@
     </div>
 
     <div class="reference-department-list">
-      <el-table :data="refData" class="table-wrap" style="width: 100%">
+      <el-table :data="refData" class="table-wrap" style="width: 100%" max-height="460px">
         <el-table-column prop="type" label="资料类型" width="200px">
         </el-table-column>
         <el-table-column prop="title" label="资料名称" width="220px">
@@ -61,6 +61,7 @@
         :page-sizes="[10, 20, 50, 100]"
         :page-size="pageSize"
         :total="totalPage"
+        style="text-align: center"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
@@ -169,4 +170,5 @@
 
 <style>
   @import url("../../../assets/css/ref-dept.css");
+  @import url("../../../assets/css/mgmt-central.css");
 </style>

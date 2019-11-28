@@ -89,7 +89,7 @@
 
 .dongtai-title{
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   font-family: "Microsoft YaHei";
   padding-left: 20px;
 }
@@ -184,6 +184,7 @@
   margin-top: 21px;
   width: 95%;
   cursor: pointer;
+  height: 175px;
 }
 
 .analysis-box{

@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/lianzheng/api/**': {
-        target: 'http://localhost:9090', // 你接口的域名
+        target: 'http://172.16.203.25:9090', // 你接口的域名
         secure: false,
         changeOrigin: false,
       }

@@ -77,12 +77,12 @@ export default new Router({
                 ]
               },
               {
-                path: '/',
+                path: '/management',
                 name: 'management',
                 meta: {
                   requireAuth: true
                 },
-                component: resolve => require(['./views/home/index.vue'], resolve),
+                component: resolve => require(['./views/pages/management/index.vue'], resolve),
               },
               {
                 path: '/report',
@@ -91,6 +91,48 @@ export default new Router({
                   requireAuth: true
                 },
                 component: resolve => require(['./views/pages/report/index.vue'], resolve),
+              },
+              {
+                path: '/mgmtcentral',
+                name: 'mgmtcentral',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/pages/mgmtcentral/index.vue'], resolve),
+                children:[
+                  {
+                    path: '/dongtaiMgmt',
+                    name: 'dongtaiMgmt',
+                    meta: {
+                      requireAuth: true
+                    },
+                    component: resolve => require(['./views/pages/mgmtcentral/dongtaiMgmt.vue'], resolve),
+                  },
+                  {
+                    path: '/reportMgmt',
+                    name: 'reportMgmt',
+                    meta: {
+                      requireAuth: true
+                    },
+                    component: resolve => require(['./views/pages/mgmtcentral/reportMgmt.vue'], resolve),
+                  },
+                  {
+                    path: '/userMgmt',
+                    name: 'userMgmt',
+                    meta: {
+                      requireAuth: true
+                    },
+                    component: resolve => require(['./views/pages/mgmtcentral/userMgmt.vue'], resolve),
+                  },
+                  {
+                    path: '/refmoduleMgmt',
+                    name: 'refmoduleMgmt',
+                    meta: {
+                      requireAuth: true
+                    },
+                    component: resolve => require(['./views/pages/mgmtcentral/refmoduleMgmt.vue'], resolve),
+                  }
+                ]
               },
               {
                 path: '/dongtai',

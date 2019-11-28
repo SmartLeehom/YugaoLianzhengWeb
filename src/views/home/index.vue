@@ -4,7 +4,7 @@
       <div class="left-top-div">
         <div class="dongtai">
           <span class="title">廉政动态</span>
-          <span class="left-more">{{"更多>>"}}</span>
+          <span class="left-more" style="cursor: pointer" @click="gotoPage('dongtai')">{{"更多>>"}}</span>
         </div>
 
         <div class="show-dongtai-info">
@@ -30,7 +30,7 @@
         <div class="lianzheng-reference">
           <div class="dongtai">
             <span class="title">廉政资料</span>
-            <span class="left-bottom-more">{{"更多>>"}}</span>
+            <span class="left-bottom-more" @click="gotoPage('reference')">{{"更多>>"}}</span>
           </div>
 
           <div class="show-dongtai-info">
@@ -46,7 +46,7 @@
         <div class="reference-module">
           <div class="dongtai">
             <span class="title" >资料模板</span>
-            <span class="left-bottom-more">{{"更多>>"}}</span>
+            <span class="left-bottom-more" @click="gotoPage('refmodule')">{{"更多>>"}}</span>
           </div>
 
           <div class="show-dongtai-info">
@@ -162,7 +162,9 @@
                 referenceMissingAmount: 0,  // 资料缺失项
                 projectMissingAmount: 0,  //项目缺失项
                 referencePer: '0%',  //资料完整度
-                projectPer: '0%'  //项目完整度
+                projectPer: '0%',  //项目完整度
+
+                pageDongtai: 'dongtai',
             }
         },
         mounted () {
@@ -228,6 +230,10 @@
             },
             // 查看资料详情
             lookReference(reference){
+                this.$router.push({
+                    name: "reference",
+                    params: {id: reference.lianzhengReferenceId, type: reference.type, title: reference.title, isEdit: 0}
+                })
             },
             // 待办、待阅事项
             getWait2Do(){
@@ -244,6 +250,20 @@
             // 廉政分析
             getAnalysis(){
 
+            },
+
+            gotoPage(name){
+                console.log('test');
+
+                if(name == 'refmodule'){
+                    this.$router.push({
+                        name: `${name}`,
+                        params: {route: 'refmodule'}
+                    })
+                }
+                this.$router.push({
+                    name: `${name}`
+                })
             }
         }
     }

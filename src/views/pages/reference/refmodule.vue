@@ -4,7 +4,7 @@
       <span class="reference-department-title">廉政资料 > 模板下载</span>
     </div>
     <div class="reference-module-table">
-      <el-table :data="moduleData" class="table-wrap" style="width: 100%">
+      <el-table :data="moduleData" class="table-wrap" style="width: 100%" max-height="540px">
         <el-table-column prop="num" label="报告编号" width="200px">
         </el-table-column>
         <el-table-column prop="moduleName" label="模板名称" width="280px">
@@ -28,9 +28,10 @@
         @size-change="sizeChangeHandle"
         @current-change="currentChangeHandle"
         :current-page="pageIndex"
-        :page-sizes="[10,20,30]"
+        :page-sizes="[10,20,50,100]"
         :page-size="pageSize"
         :total="totalPage"
+        style="text-align: center"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>

@@ -1,0 +1,35 @@
+.mgmt-central-remarks-box{
+  margin: 15px 0;
+}
+
+.mgmt-central-remarks{
+  font-size: 16px;
+  color: #828386;
+}
+
+.mgmt-central-dongtai-detail{
+  height: 700px;
+}
+
+.dialog-title{
+  font-size: 16px;
+  color: #828386;
+  margin-right: 10px;
+}
+
+.dialog-value{
+  width: 90%;
+}
+
+.dialog-row{
+  margin-top: 15px;
+}
+
+.mgmt-central-report-detail{
+  height: 400px;
+  width: 600px;
+}
+
+.small-dialog-value{
+  width: 81%;
+}

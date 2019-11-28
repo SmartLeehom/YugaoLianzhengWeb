@@ -4,7 +4,7 @@
       <span class="reference-department-title">廉政报告</span>
     </div>
     <div class="reference-module-table">
-      <el-table :data="moduleData" class="table-wrap" style="width: 100%">
+      <el-table :data="moduleData" class="table-wrap" style="width: 100%" max-height="520px">
         <el-table-column prop="num" label="报告编号" width="200px">
         </el-table-column>
         <el-table-column prop="moduleName" label="模板名称" width="350px">
@@ -83,6 +83,6 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+  @import url("../../../assets/css/ref-dept.css");
 </style>

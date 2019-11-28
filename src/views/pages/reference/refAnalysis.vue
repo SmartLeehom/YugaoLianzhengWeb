@@ -25,7 +25,7 @@
         <span class="sub-title" style="margin-right: 15px; font-size: 15px">资料缺失</span><span class="sub-title-val" >{{amount}}</span><span class="sub-title"  style="font-size: 15px">项</span>
       </div>
       <div class="reference-analysis-table">
-        <el-table :data="analysisData" class="table-wrap" style="width: 100%">
+        <el-table :data="analysisData" class="table-wrap" style="width: 100%" max-height="400px">
           <el-table-column prop="typeName" label="资料类型" width="200px">
           </el-table-column>
           <el-table-column prop="projectName" label="所属项目" width="220px">
@@ -59,9 +59,10 @@
           @size-change="sizeChangeHandle"
           @current-change="currentChangeHandle"
           :current-page="pageIndex"
-          :page-sizes="[6]"
+          :page-sizes="[10,20,50,100]"
           :page-size="pageSize"
           :total="totalPage"
+          style="text-align: center"
           layout="total, sizes, prev, pager, next, jumper"
         ></el-pagination>
       </div>
@@ -100,6 +101,10 @@
                     {id: 2, typeName: "廉政专题教育会图文资料", type: 1, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
                     {id: 3, typeName: "廉政专题教育会图文资料", type: 1, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
                     {id: 4, typeName: "廉政专题教育会图文资料", type: 1, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
+                    {id: 3, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
+                    {id: 4, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
+                    {id: 3, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
+                    {id: 4, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
                     {id: 3, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
                     {id: 4, typeName: "廉政交底现场照片", type: 4, deptName: "部门1", projectName: "项目1", dueDate: "2019-1-1", missingDay: "5"},
                 ]

@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <el-container class="layout-container" direction="vertical">
+    <el-container class="layout-container">
       <el-header class="layout-header" style="height: 280px">
         <div class="layout-header-top">
             <img :src="logo" alt class="logo"/>
@@ -13,6 +13,7 @@
             <el-menu-item index="reference" :class="activeIndex=='reference'?'top-menu-item selected':'top-menu-item'">廉政资料</el-menu-item>
             <el-menu-item index="management" :class="activeIndex=='management'?'top-menu-item selected':'top-menu-item'">项目监管</el-menu-item>
             <el-menu-item index="report" :class="activeIndex=='report'?'top-menu-item selected':'top-menu-item'">廉政报告</el-menu-item>
+            <el-menu-item index="mgmtcentral" :class="activeIndex=='mgmtcentral'?'top-menu-item selected':'top-menu-item'">管理中心</el-menu-item>
           </el-menu>
 
           <el-popover
