@@ -70,7 +70,7 @@
         </div>
 
         <div class="right-panel-box">
-          <div class="reference-box" v-for="(item_f1, index_f1) in lzWait2Do" :key="index_f1" @click="lookReference(item_f1)">
+          <div class="reference-box" v-for="(item_f1, index_f1) in lzWait2Do" :key="index_f1" @click="">
             <span class="waiting2DoReadDot"></span>
             <h3 class="reference_title reference-waiting-do-title">
               {{ item_f1.remarks }}
@@ -85,7 +85,7 @@
           <!--<span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>-->
         </div>
 
-        <div class="right-panel-box">
+        <div class="right-panel-box" @click="gotoPage('missing')">
           <div class="top-analysis">
             <div class="left-analysis">
               <span class="analysis-value">{{referenceMissingAmount}}</span><br/>
@@ -253,17 +253,23 @@
             },
 
             gotoPage(name){
-                console.log('test');
-
                 if(name == 'refmodule'){
                     this.$router.push({
                         name: `${name}`,
                         params: {route: 'refmodule'}
                     })
                 }
-                this.$router.push({
-                    name: `${name}`
-                })
+                else if(name == 'missing'){
+                    this.$router.push({
+                        name: "reference",
+                        params: {route: 'missing'}
+                    })
+                }
+                else{
+                    this.$router.push({
+                        name: `${name}`
+                    })
+                }
             }
         }
     }
