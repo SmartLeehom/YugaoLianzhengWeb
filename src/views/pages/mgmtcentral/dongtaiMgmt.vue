@@ -23,6 +23,13 @@
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="viewDetail(scope.row.id)">预览</el-button>
             <el-button
+              class="del_danger"
+              type="text"
+              size="small"
+              @click="edit(scope.row.id)"
+              v-if="scope.row.status==0"
+            >编辑</el-button>
+            <el-button
               class="edit_green"
               type="text"
               size="small"
@@ -60,7 +67,7 @@
 
     </div>
 
-    <el-dialog title="廉政动态" :visible.sync="dialogFormVisible" :append-to-body="true" custom-class="mgmt-central-dongtai-detail">
+    <el-dialog title="廉政动态" :visible.sync="dialogFormVisible" :append-to-body="true" :before-close="closeDialog" custom-class="mgmt-central-dongtai-detail">
       <div>
         <span class="dialog-title">文章标题</span>
         <el-input v-model="dongtaiTitle" class="dialog-value" placeholder="请输入文章标题"></el-input>
@@ -120,6 +127,7 @@
         <span class="dialog-title" style="float: left">关联附件</span>
 
         <el-upload
+          :before-remove="removeFile"
           ref="fileUpload"
           :headers="fileHeaders"
           accept=".pdf"
@@ -135,8 +143,8 @@
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="danger" @click="addDongtai()">确 定</el-button>
+        <el-button type="danger" @click="closeDialog">取 消</el-button>
+        <el-button type="danger" @click="addOrUpdateDongtai()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -161,11 +169,11 @@
                 fileList: [],
                 fileRes: null,
                 imgRes: null,
-
                 fileHeaders:{
                     "Content-Type":"multipart/form-data"
                 },
                 autoUpload: false,
+                editEntity: null,
             }
         },
         mounted(){
@@ -173,10 +181,41 @@
         },
         methods:{
             getData(){
-                this.pageData=[
+                /*this.pageData=[
                     {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},
                     {order: 1, title: '动态1', statusDesc: '草稿', status: 0, createdAt: '2019-11-23', id:1}
-                ]
+                ]*/
+
+                let param={
+                    page: this.pageIndex,
+                    size: this.pageSize
+                };
+
+                this.$api.get('dongtai/findList',param, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("查询失败")
+                        return;
+                    }
+
+                    this.totalPage = res.pagebar.total;
+
+                    this.pageData = [];
+                    var order = (this.pageIndex-1) * this.pageSize + 1;
+
+                    for(var i=0; i<res.list.length; i++){
+                        var item = res.list[i];
+                        var obj={
+                            order: order,
+                            title: item.title,
+                            statusDesc: item.status.toString() == "1" ? "已发布" : "未发布",
+                            status: item.status ? parseInt(item.status) : 0,
+                            createdAt: item.createdAt.split(' ')[0],
+                            id: item.lianzhengDongtaiId
+                        };
+                        this.pageData.push(obj);
+                        order ++;
+                    }
+                })
             },
             sizeChangeHandle(val) {
                 this.pageSize = val
@@ -191,9 +230,29 @@
             viewDetail(id){
 
             },
+            // 编辑
+            edit(id){
+                // 初始化数据
+                this.$api.get('dongtai/findById',{id: id}, res=>{
+                    this.editEntity = res.data;
+
+                    this.dongtaiContent = this.editEntity.content;
+                    this.dongtaiTitle = this.editEntity.title;
+
+                    this.dialogFormVisible = true;
+                })
+            },
             // 删除动态
             deleteDt(id){
+                this.$api.post('dongtai/delete',{id: id}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+                    this.$message("删除成功");
 
+                    this.getData();
+                })
             },
             // 发布
             publish(id){
@@ -207,20 +266,41 @@
             addDongtai(){
                 this.dialogFormVisible = false;
             },
+            removeFile(){
+                this.$api.get('file/delete',{id: this.fileRes.lianzhengFileId}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+
+                    this.fileRes = null;
+                    this.$message("删除成功")
+                    return true;
+                })
+            },
             handleRemove(file) {
                 let fileList = this.$refs.imgUpload.uploadFiles;
                 let index = fileList.findIndex( fileItem => {
                     return fileItem.uid === file.uid
                 })
                 fileList.splice(index, 1)
+
+                this.$api.get('file/delete',{id: this.imgRes.lianzhengFileId}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return;
+                    }
+
+                    imgRes = null;
+                    this.$message("删除成功")
+                    return false;
+                })
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogImgVisible = true;
             },
             handleDownload(file) {
-                console.log(file)
-                console.log(this.imgList)
             },
             imgUploadCheck(){
                 if(this.$refs.imgUpload.uploadFiles.length > 0){
@@ -229,21 +309,94 @@
                 }
             },
             uploadFile(data){
-                console.log("开始上传附件");
-                console.log(data.file);
                 let param = new FormData(); //创建form对象
                 param.append('file',data.file);
 
-                let config = {
-                    headers:{'Content-Type':'multipart/form-data'}
-                };
-
                 this.$api.post('file/upload',param, res=>{
-                    this.fileRes=res.data
-                    console.log(this.fileRes)
+                    console.log(res.data);
+                    let filedata = res.data;
+                    if(filedata.suffix.indexOf('pdf')>=0){
+                        this.fileRes=filedata
+                    }
+                    else{
+                        this.imgRes=filedata
+                    }
+
                     return false;
                 })
+            },
+            addOrUpdateDongtai(){
+                if(!this.dongtaiTitle || this.trim(this.dongtaiTitle).length < 1){
+                    this.$message('请输入动态标题')
+                    return;
+                }
+                if(!this.dongtaiContent || this.trim(this.dongtaiContent).length < 1){
+                    this.$message('请输入动态内容')
+                    return;
+                }
+                if(!this.fileRes){
+                    this.$message('请上传附件')
+                    return;
+                }
+                if(!this.imgRes){
+                    this.$message('请上传封面图片')
+                    return;
+                }
 
+                if(this.editEntity){
+                    // 编辑
+                    this.editEntity.title = this.dongtaiTitle
+                    this.editEntity.content = this.dongtaiContent
+
+                    this.editEntity.imageId =  this.imgRes.lianzhengFileId;
+                    this.editEntity.fileId =  this.fileRes.lianzhengFileId;
+
+                    this.$api.post('dongtai/addOrUpdate',this.editEntity, res=>{
+                        if(res.code.toString() != "0"){
+                            this.$message("保存失败，请重新提交")
+                            return;
+                        }
+
+                        this.getData()
+                        this.closeDialog();
+                    })
+                }
+                else{
+                    let data={
+                        title: this.dongtaiTitle,
+                        content: this.dongtaiContent,
+                        status: 0,
+                        imageId: this.imgRes.lianzhengFileId,
+                        fileId: this.fileRes.lianzhengFileId,
+                    };
+
+                    this.$api.post('dongtai/addOrUpdate',data, res=>{
+                        if(res.code.toString() != "0"){
+                            this.$message("保存失败，请重新提交")
+                            return;
+                        }
+
+                        this.getData()
+                        this.closeDialog();
+                    })
+                }
+
+            },
+            trim(str){
+                return str.replace(/(^\s*)|(\s*$)/g, "");
+            },
+            closeDialog(){
+                this.fileRes = null
+                this.imgRes = null
+                this.dongtaiTitle = null
+                this.dongtaiContent = null
+                this.editEntity = null
+
+
+                this.$refs.imgUpload.clearFiles();
+                this.$refs.fileUpload.clearFiles();
+
+                this.dialogFormVisible = false;
             }
         }
     }
