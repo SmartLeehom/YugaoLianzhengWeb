@@ -7,7 +7,7 @@
 
     <div class="mgmt-central-dongtai-list-box" style="margin-top: 15px">
       <el-table :data="pageData" class="table-wrap" style="width: 100%" max-height="520px">
-        <el-table-column prop="reportId" label="序号" width="100px">
+        <el-table-column prop="order" label="序号" width="100px">
         </el-table-column>
         <el-table-column prop="reportTitle" label="报告标题" width="300px">
         </el-table-column>
@@ -120,10 +120,16 @@
         methods:{
             getData(){
                 this.$api.get('report/list?type=0&page=1&size=10',null,res=>{
-                this.pageData=res.list;
-                this.pageIndex=res.pagebar.page;
-                this.totalSize=res.pagebar.size;
-                this.totalPage=res.pagebar.total;
+                  this.pageData=res.list;
+                  let order = (this.pageIndex-1)*this.pageSize+1;
+                  for(var i=0; i<this.pageData.length; i++){
+                      this.pageData[i].order = order;
+                      order ++;
+                  }
+
+                  this.pageIndex=res.pagebar.page;
+                  this.totalSize=res.pagebar.size;
+                  this.totalPage=res.pagebar.total;
               })
                 // this.pageData=[
                 //     {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},

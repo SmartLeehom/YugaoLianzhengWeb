@@ -143,19 +143,11 @@
         data(){
             return{
                 photos:[
-                    require('../../assets/img/bg_顶部.png'),
-                    require('../../assets/img/bg_底部.png'),
-                    require('../../assets/img/bg_顶部.png'),
-                    require('../../assets/img/bg_底部.png')
                 ],
                 activePhoto: 0,
                 titles:[
-                    '廉政动态1',
-                    '廉政动态2',
-                    '廉政动态3',
-                    '廉政动态4',
                 ],
-                currentTitle: '廉政动态1',
+                currentTitle: '',
                 lzReferences: [],  // 廉政资料
                 lzReferenceModules: [],  // 资料模板
                 lzWait2Do: [],  //待办待阅
@@ -163,7 +155,6 @@
                 projectMissingAmount: 0,  //项目缺失项
                 referencePer: '0%',  //资料完整度
                 projectPer: '0%',  //项目完整度
-
                 pageDongtai: 'dongtai',
             }
         },
@@ -175,7 +166,7 @@
                 if (event.which == 39)
                     this.nextPhoto()
             })
-            this.getPhoto()
+            this.getDongtai()
             this.getReferences()
             this.getReferenceModule()
             this.getWait2Do()
@@ -185,7 +176,6 @@
             changePhoto (index) {
                 this.activePhoto = index;
                 this.currentTitle = this.titles[index];
-
             },
             nextPhoto () {
                 this.changePhoto( this.activePhoto+1 < this.photos.length ? this.activePhoto+1 : 0 )
@@ -193,17 +183,22 @@
             previousPhoto () {
                 this.changePhoto( this.activePhoto-1 >= 0 ? this.activePhoto-1 : this.photos.length-1 )
             },
-            //廉政动态
-            getPhoto(){
-            //   this.$api.get('/dongtai/findList?page=1&size=4',null,res=>{
-            //   this.photos=res.list
-            // })
-                this.photos = [
-                    require('../../assets/img/bg_顶部.png'),
-                    require('../../assets/img/bg_底部.png'),
-                    require('../../assets/img/bg_顶部.png'),
-                    require('../../assets/img/bg_底部.png')
-                ];
+            getDongtai(){
+                this.$api.get('dongtai/findList',{page: 1, size: 4}, res=>{
+                    this.photos = [];
+                    this.titles = [];
+                    let tempList = res.list;
+
+                    for(let i=0; i<tempList.length; i++){
+                        var item = tempList[i];
+                        this.photos.push("http://localhost:8080/lianzheng/api/file/preview?businessId="+item.lianzhengDongtaiId+"&moduleId=2");
+                        this.titles.push(item.title);
+                    }
+
+                    this.currentTitle = this.titles[0];
+
+                    this.dialogFormVisible = true;
+                })
             },
             //廉政资料
             getReferences(){
