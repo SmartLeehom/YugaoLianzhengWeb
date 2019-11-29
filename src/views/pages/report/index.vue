@@ -5,11 +5,11 @@
     </div>
     <div class="reference-module-table">
       <el-table :data="moduleData" class="table-wrap" style="width: 100%" max-height="520px">
-        <el-table-column prop="num" label="报告编号" width="200px">
+        <el-table-column prop="reportId" label="报告编号" width="200px">
         </el-table-column>
-        <el-table-column prop="moduleName" label="模板名称" width="350px">
+        <el-table-column prop="reportTitle" label="模板名称" width="350px">
         </el-table-column>
-        <el-table-column prop="uploadDate" label="上传时间" width="160px">
+        <el-table-column prop="createDate" label="上传时间" width="160px">
         </el-table-column>
         <el-table-column prop="action" label="操作" width="158">
           <template slot-scope="scope">
@@ -60,9 +60,15 @@
         },
         methods:{
             getData(){
-                this.moduleData = [
-                    {id: 1, num: 1, moduleName: '模板1', uploadDate: '2010-1-1'}
-                ]
+              this.$api.get('report/list?type=0&page=1&size=10',null,res=>{
+              this.moduleData=res.list;
+              this.pageIndex=res.pagebar.page;
+              this.totalSize=res.pagebar.size;
+              this.totalPage=res.pagebar.total;
+            })
+                // this.moduleData = [
+                //     {id: 1, num: 1, moduleName: '模板1', uploadDate: '2010-1-1'}
+                // ]
             },
             sizeChangeHandle(val) {
                 this.pageSize = val
