@@ -155,14 +155,35 @@
             },
             deleteDt(id){
               this.$api.get('report/delete?id='+id,null,res=>{
+                if(res.code.toString() != "0"){
+                    this.$message("删除失败")
+                    return false;
+                }
+                this.$message("删除成功");
+
+                this.getData();
               })
             },
             publish(id){
               this.$api.get('report/publish?id='+id,null,res=>{
+                if(res.code.toString() != "0"){
+                    this.$message("发布失败")
+                    return false;
+                }
+                this.$message("发布成功");
+
+                this.getData();
               })
             },
             withdraw(id){
               this.$api.get('report/cancel?id='+id,null,res=>{
+                if(res.code.toString() != "0"){
+                    this.$message("取消失败")
+                    return false;
+                }
+                this.$message("取消成功");
+
+                this.getData();
               })
             },
             addReport(){
@@ -175,6 +196,13 @@
                   "createUserName":"yangrenshan"
                 };
                 this.$api.post('report/save',obj,res=>{
+                  if(res.code.toString() != "0"){
+                      this.$message("新增失败")
+                      return false;
+                  }
+                  this.$message("新增成功");
+
+                  this.getData();
                 })
             }
         }
