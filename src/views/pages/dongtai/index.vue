@@ -40,6 +40,7 @@
 </template>
 
 <script>
+  import baseUrl from "../../../utils/baseUrl";
     export default {
         name: "refmodule",
         data(){
@@ -55,11 +56,18 @@
         },
         methods:{
             getData(){
-                this.moduleData = [
-                    {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_底部.png'), title: '动态2', content: '789022', createdAt: '2019-1-1'},
-                    {id:1, img: require('../../../assets/img/bg_顶部.png'), title: '动态1', content: '123456', createdAt: '2019-1-1'},
-                ]
+                this.$api.get('dongtai/findList',{page: this.pageIndex, size: this.pageSize}, res=>{
+                    let tempList = res.list;
+
+                    for(let i=0; i<tempList.length; i++){
+                        var item = tempList[i];
+                        this.moduleData.push({id:item.lianzhengDongtaiId, img: baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=2", title: item.title, content: item.content, createdAt: item.createdAt});
+                    }
+
+                    this.currentTitle = this.titles[0];
+
+                    this.dialogFormVisible = true;
+                })
             },
             sizeChangeHandle(val) {
                 this.pageSize = val

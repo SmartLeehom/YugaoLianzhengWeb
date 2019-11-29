@@ -244,7 +244,7 @@
             },
             // 删除动态
             deleteDt(id){
-                this.$api.post('dongtai/delete',{id: id}, res=>{
+                this.$api.get('dongtai/delete',{id: id}, res=>{
                     if(res.code.toString() != "0"){
                         this.$message("删除失败")
                         return false;

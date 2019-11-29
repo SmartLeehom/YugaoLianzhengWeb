@@ -78,8 +78,8 @@
 }
 
 .main-img-panel .dongtai-title-div{
-  background-color: #ed0909;
-  opacity: 0.2;
+  background-color:#36373b;
+  opacity: 0.5;
   width: 99%;
   padding-left: 1%;
   position:absolute;
@@ -264,6 +264,12 @@
   margin-right: 10px;
   height: 50%;
   vertical-align: center;
+}
+
+.preview-pdf{
+  height: 800px;
+  max-height: 800px;
+  overflow: scroll;
 }
 
 

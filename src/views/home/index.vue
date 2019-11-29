@@ -1,5 +1,14 @@
 <template>
   <div class="home">
+    <el-dialog :visible.sync="dialogFormVisible" :append-to-body="true" class="preview-pdf">
+      <p class="arrow" style="cursor: pointer">
+        <!-- // 上一页 -->
+        <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}">{{"<< "}}</span>
+        {{currentPage}} / {{pageCount}}
+        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}">{{" >>"}}</span>
+      </p>
+      <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+    </el-dialog>
     <div class="left-panel">
       <div class="left-top-div">
         <div class="dongtai">
@@ -8,7 +17,7 @@
         </div>
 
         <div class="show-dongtai-info">
-          <div class="main-img-panel" :style="'background-image: url('+photos[activePhoto]+');'">
+          <div class="main-img-panel" :style="'background-image: url('+photos[activePhoto]+');'" @click="previewDongtai">
             <div class="dongtai-title-div">
               <span class="dongtai-title">{{currentTitle}}</span>
             </div>
@@ -137,8 +146,13 @@
 
 <script>
     import $ from 'jquery';
+    import baseUrl from "../../utils/baseUrl";
+    import pdf from 'vue-pdf'
 
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "home",
         data(){
             return{
@@ -156,6 +170,11 @@
                 referencePer: '0%',  //资料完整度
                 projectPer: '0%',  //项目完整度
                 pageDongtai: 'dongtai',
+                dongtaiIds: [],
+                pdfUrl: null,
+                dialogFormVisible: false,
+                currentPage: 0, // pdf文件页码
+                pdfPageCount: 0, // pdf文件总页数
             }
         },
         mounted () {
@@ -173,6 +192,15 @@
             this.getAnalysis()
         },
         methods: {
+            previewDongtai(){
+                let currentId = this.dongtaiIds[this.activePhoto];
+                console.log(currentId);
+
+                this.dialogFormVisible = true;
+
+                this.pdfUrl = pdf.createLoadingTask("http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf")
+                //this.pdfUrl = "http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf";
+            },
             changePhoto (index) {
                 this.activePhoto = index;
                 this.currentTitle = this.titles[index];
@@ -187,17 +215,17 @@
                 this.$api.get('dongtai/findList',{page: 1, size: 4}, res=>{
                     this.photos = [];
                     this.titles = [];
+                    this.dongtaiIds = [];
                     let tempList = res.list;
 
                     for(let i=0; i<tempList.length; i++){
                         var item = tempList[i];
-                        this.photos.push("http://localhost:8080/lianzheng/api/file/preview?businessId="+item.lianzhengDongtaiId+"&moduleId=2");
+                        this.photos.push(baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=2");
                         this.titles.push(item.title);
+                        this.dongtaiIds.push(item.lianzhengDongtaiId);
                     }
 
                     this.currentTitle = this.titles[0];
-
-                    this.dialogFormVisible = true;
                 })
             },
             //廉政资料
@@ -265,7 +293,24 @@
                         name: `${name}`
                     })
                 }
-            }
+            },
+
+            changePdfPage(val) {
+                // console.log(val)
+                if (val === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                    // console.log(this.currentPage)
+                }
+                if (val === 1 && this.currentPage < this.pageCount) {
+                    this.currentPage++;
+                    // console.log(this.currentPage)
+                }
+            },
+
+            // pdf加载时
+            loadPdfHandler(e) {
+                this.currentPage = 1; // 加载的时候先加载第一页
+            },
         }
     }
 </script>
