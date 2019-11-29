@@ -244,7 +244,7 @@
             },
             // 删除动态
             deleteDt(id){
-                this.$api.get('dongtai/delete',{id: id}, res=>{
+                this.$api.get('dongtai/delete?id='+id,null, res=>{
                     if(res.code.toString() != "0"){
                         this.$message("删除失败")
                         return false;
@@ -256,11 +256,27 @@
             },
             // 发布
             publish(id){
+              this.$api.get('dongtai/publish?id='+id,null, res=>{
+                  if(res.code.toString() != "0"){
+                      this.$message("发布失败")
+                      return false;
+                  }
+                  this.$message("发布成功");
 
+                  this.getData();
+              })
             },
             // 取消发布
             withdraw(id){
+              this.$api.get('dongtai/cancel?id='+id,null, res=>{
+                  if(res.code.toString() != "0"){
+                      this.$message("取消失败")
+                      return false;
+                  }
+                  this.$message("取消成功");
 
+                  this.getData();
+              })
             },
             // 新增一条动态
             addDongtai(){
