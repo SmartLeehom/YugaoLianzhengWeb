@@ -7,36 +7,37 @@
 
     <div class="mgmt-central-dongtai-list-box" style="margin-top: 15px">
       <el-table :data="pageData" class="table-wrap" style="width: 100%" max-height="520px">
-        <el-table-column prop="order" label="序号" width="100px">
+        <el-table-column prop="reportId" label="序号" width="100px">
         </el-table-column>
-        <el-table-column prop="title" label="报告标题" width="300px">
+        <el-table-column prop="reportTitle" label="报告标题" width="300px">
         </el-table-column>
         <el-table-column prop="statusDesc" label="报告状态" width="140px">
         </el-table-column>
-        <el-table-column prop="createdAt" label="生成时间" width="140px">
+        <el-table-column prop="createDate" label="生成时间" width="140px">
         </el-table-column>
         <el-table-column prop="action" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="viewDetail(scope.row.id)">预览</el-button>
+            <el-button type="text" size="small" @click="viewDetail(scope.row.reportId)">预览</el-button>
             <el-button
               class="edit_green"
               type="text"
               size="small"
-              @click="deleteDt(scope.row.id, scope.row.title)"
+              @click="deleteDt(scope.row.reportId, scope.row.title)"
+              v-if="scope.row.statusCode!=2"
             >删除</el-button>
             <el-button
               class="del_danger"
               type="text"
               size="small"
-              @click="publish(scope.row.id)"
-              v-if="scope.row.status==0"
+              @click="publish(scope.row.reportId)"
+              v-if="scope.row.statusCode==0"
             >发布</el-button>
             <el-button
               class="del_danger"
               type="text"
               size="small"
-              v-if="scope.row.status==1"
-              @click="withdraw(scope.row.id)"
+              v-if="scope.row.statusCode==1"
+              @click="withdraw(scope.row.reportId)"
             >取消发布</el-button>
           </template>
         </el-table-column>
@@ -118,10 +119,16 @@
         },
         methods:{
             getData(){
-                this.pageData=[
-                    {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},
-                    {order: 1, title: '动态1', statusDesc: '草稿', status: 0, createdAt: '2019-11-23', id:1}
-                ]
+                this.$api.get('report/list?type=0&page=1&size=10',null,res=>{
+                this.pageData=res.list;
+                this.pageIndex=res.pagebar.page;
+                this.totalSize=res.pagebar.size;
+                this.totalPage=res.pagebar.total;
+              })
+                // this.pageData=[
+                //     {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},
+                //     {order: 1, title: '动态1', statusDesc: '草稿', status: 0, createdAt: '2019-11-23', id:1}
+                // ]
             },
             sizeChangeHandle(val) {
                 this.pageSize = val
@@ -133,16 +140,24 @@
                 this.getData()
             },
             viewDetail(id){
-
+              this.$api.get('report/detail?id='+id,null,res=>{
+                this.reportTitle=res.data.reportTitle;
+                this.periodStart=res.data.fromDate;
+                this.periodEnd=res.data.toDate;
+                this.dialogFormVisible=true;
+              })
             },
             deleteDt(id){
-
+              this.$api.get('report/delete?id='+id,null,res=>{
+              })
             },
             publish(id){
-
+              this.$api.get('report/publish?id='+id,null,res=>{
+              })
             },
             withdraw(id){
-
+              this.$api.get('report/cancel?id='+id,null,res=>{
+              })
             },
             addReport(){
                 this.dialogFormVisible = false;
