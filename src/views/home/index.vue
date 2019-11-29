@@ -118,15 +118,15 @@
         <div class="right-panel-box">
           <div class="tel-box">
             <span class="contact-title">电话</span>
-            <span class="contact-value">023-67890123</span>
+            <span class="contact-value">023-63026020</span>
           </div>
           <div class="email-box">
             <span class="contact-title">邮件</span>
-            <span class="contact-value">yugaoxxxx@yugao.com</span>
+            <span class="contact-value">yugaojiandu@163.com</span>
           </div>
           <div class="addr-box">
             <span class="contact-title">地址</span>
-            <span class="contact-value">重庆市两江新区金渝大道16号</span>
+            <span class="contact-value">重庆市两江新区金渝大道16号 监察审计部</span>
           </div>
         </div>
       </div>

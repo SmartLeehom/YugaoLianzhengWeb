@@ -80,12 +80,14 @@
         <span class="dialog-title" style="float: left">封面图片</span>
 
         <el-upload
+          :headers="fileHeaders"
           accept="image/*"
           action="#"
           list-type="picture-card"
           :file-list="imgList"
           ref="imgUpload"
-          :auto-upload="false">
+          :limit="1"
+          :http-request="uploadFile">
           <i slot="default" class="el-icon-plus"></i>
           <div slot="file" slot-scope="{file}">
             <img
@@ -118,11 +120,14 @@
         <span class="dialog-title" style="float: left">关联附件</span>
 
         <el-upload
+          ref="fileUpload"
+          :headers="fileHeaders"
           accept=".pdf"
           class="upload-demo"
+          :with-credentials="true"
           action="#"
-          :auto-upload="false"
           :limit="1"
+          :http-request="uploadFile"
           :file-list="fileList">
           <el-button size="small" >点击上传</el-button>
           <div style="margin-left: 80px" slot="tip" class="el-upload__tip">只能上传一份pdf文件</div>
@@ -153,7 +158,14 @@
                 dialogImgVisible: false,
                 dialogImageUrl: '',
                 imgList: [],
-                fileList: []
+                fileList: [],
+                fileRes: null,
+                imgRes: null,
+
+                fileHeaders:{
+                    "Content-Type":"multipart/form-data"
+                },
+                autoUpload: false,
             }
         },
         mounted(){
@@ -215,6 +227,23 @@
                     this.$message('只能上传一张封面图片。请先删除原来的图片后，再重新上传');
                     return false;
                 }
+            },
+            uploadFile(data){
+                console.log("开始上传附件");
+                console.log(data.file);
+                let param = new FormData(); //创建form对象
+                param.append('file',data.file);
+
+                let config = {
+                    headers:{'Content-Type':'multipart/form-data'}
+                };
+
+                this.$api.post('file/upload',param, res=>{
+                    this.fileRes=res.data
+                    console.log(this.fileRes)
+                    return false;
+                })
+
             }
         }
     }
