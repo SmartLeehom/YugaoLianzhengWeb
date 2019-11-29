@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <el-dialog :visible.sync="dialogFormVisible" :append-to-body="true" class="preview-pdf">
-      <p class="arrow" style="cursor: pointer">
+      <p class="arrow" style="text-align: center">
         <!-- // 上一页 -->
-        <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}">{{"<< "}}</span>
-        {{currentPage}} / {{pageCount}}
-        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}">{{" >>"}}</span>
+        <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+        <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pageCount}}</span>
+        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
       </p>
       <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
     </el-dialog>
@@ -230,7 +230,7 @@
             },
             //廉政资料
             getReferences(){
-              this.$api.get('reference/findList?type=0&page=1&size=5',null,res=>{
+              this.$api.get('reference/findList?page=1&size=5',null,res=>{
               this.lzReferences=res.list
             })
                 // this.lzReferences = [

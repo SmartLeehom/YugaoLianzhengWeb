@@ -78,11 +78,15 @@
           <span class="dialog-title" style="float: left">关联附件</span>
 
           <el-upload
+            :before-remove="removeFile"
+            ref="fileUpload"
+            :headers="fileHeaders"
             accept=".pdf"
             class="upload-demo"
+            :with-credentials="true"
             action="#"
-            :auto-upload="false"
             :limit="1"
+            :http-request="uploadFile"
             :file-list="fileList">
             <el-button size="small" >点击上传</el-button>
             <div style="margin-left: 80px" slot="tip" class="el-upload__tip">只能上传一份pdf文件</div>
@@ -111,7 +115,12 @@
                 reportTitle: '',
                 periodStart: null,
                 periodEnd: null,
-                fileList: []
+                fileList: [],
+                fileHeaders:{
+                    "Content-Type":"multipart/form-data"
+                },
+                autoUpload: false,
+                fileRes: null,
             }
         },
         mounted(){
@@ -204,7 +213,35 @@
 
                   this.getData();
                 })
-            }
+            },
+            removeFile(){
+                this.$api.get('file/delete',{id: this.fileRes.lianzhengFileId}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+
+                    this.fileRes = null;
+                    this.$message("删除成功")
+                    return true;
+                })
+            },
+            uploadFile(data){
+                let param = new FormData(); //创建form对象
+                param.append('file',data.file);
+
+                this.$api.post('file/upload',param, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("上传失败")
+                        return false;
+                    }
+
+                    this.$message("上传成功")
+                    this.fileRes = res.data;
+
+                    return false;
+                })
+            },
         }
     }
 </script>

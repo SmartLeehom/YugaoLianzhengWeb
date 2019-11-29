@@ -12,7 +12,7 @@
 
       <span class="query-title">资料类型</span>
       <el-select v-model="refTypes.key" style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
-        <el-option v-for="item in refTypes" :key="item.lianzhengReferenceFileTypeId" :label="item.lianzhengReferenceFileTypeId" :value="item.name"> </el-option>
+        <el-option v-for="item in refTypes" :key="item.lianzhengReferenceFileTypeId" :label="item.name" :value="item.lianzhengReferenceFileTypeId"> </el-option>
       </el-select>
 
       <span class="query-title">关键词</span>
@@ -77,7 +77,9 @@
                 refTypes: [],
                 keyPattern: '',
                 selectedDept: '',
+                selectedDeptName: '',
                 selectedReftype: '',
+                selectedReftypeName: '',
                 refData: [],
                 pageIndex: 1,
                 pageSize: 10,
@@ -112,17 +114,19 @@
             },
             deptChanges(val){
                 // val为key
-                console.log(val);
                 this.selectedDept = val;
+                var item = this.depts.find(d=>d.fid == val);
+                this.selectedDeptName = item.fname;
             },
             reftypeChanges(val){
-                console.log(val);
                 this.selectedReftype = val;
+                var item = this.refTypes.find(d=>d.lianzhengReferenceFileTypeId == val);
+                this.selectedReftypeName = item.name;
             },
 
             queryRefList(){
                 console.log(this.selectedDept + '--' + this.selectedReftype + '--' + this.keyPattern);
-                this.$api.get('reference/findList?type=0&page=1&size=10&pattern='+this.keyPattern,null,res=>{
+                this.$api.get('reference/findList?type=0&page=1&referenceType='+this.selectedReftype+'&size=10&pattern='+this.keyPattern,null,res=>{
                 this.refData=res.list;
                 this.pageIndex=res.pagebar.page;
                 this.totalSize=res.pagebar.size;

@@ -39,18 +39,17 @@
         <!--<textarea v-model="content" class="input-text full-widith"  style="max-height: 200px; min-height: 200px; resize: none"></textarea>-->
       </div>
       <div style="margin-top: 15px;">
-        <span class="query-title" style="vertical-align: top">附件列表</span>
+        <span class="query-title" style="vertical-align: top; float: left; margin-right: 10px">附件列表</span>
         <el-upload
+          :before-remove="removeFile"
+          ref="fileUpload"
+          :headers="fileHeaders"
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
+          :with-credentials="true"
+          action="#"
+          :http-request="uploadFile"
           :file-list="fileList">
-          <el-button size="small" type="primary">点击上传</el-button>
+          <el-button size="small" >点击上传</el-button>
         </el-upload>
       </div>
     </div>
@@ -74,6 +73,7 @@
                 selectedDept: '',
                 selectedDeptName: '',
                 selectedReftype: '',
+                selectedReftypeName: '',
                 refName: '',
                 content: '',
                 createdByName: '',
@@ -81,9 +81,16 @@
                 constNone: 'none',
                 fileList: [],
                 returnBack: -1,
+                fileRes: [],
+                fileHeaders:{
+                    "Content-Type":"multipart/form-data"
+                },
+                fileMap:{},
+                referenceEntity:{}
             }
         },
         mounted(){
+            console.log(this.$route.params)
             this.returnBack = this.$route.params.returnBack ? this.$route.params.returnBack : -1;
             this.getDepts()
             this.getRefTypes()
@@ -114,23 +121,32 @@
             },
             deptChanges(val){
                 // val为key
-                console.log(val);
                 this.selectedDept = val;
-                this.selectedDeptName = "";
+                var item = this.depts.find(d=>d.fid == val);
+                this.selectedDeptName = item.fname;
             },
             reftypeChanges(val){
                 console.log(val);
                 this.selectedReftype = val;
+                var item = this.refTypes.find(d=>d.lianzhengReferenceFileTypeId == val);
+                this.selectedReftypeName = item.name;
             },
             getDetail(id){
-              this.$api.get('reference/findById?id='+id,null,res=>{
-                this.createdByName = res.data.createdBy;
-                this.createdAt = res.data.createdAt;
-                this.selectedDept = res.data.department;
-                this.selectedReftype=res.data.type;
-                this.content = res.data.content;
-                this.refName = res.data.projectName;
-            })
+                this.$api.get('reference/findById',{id: id}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("查询失败")
+                        return false;
+                    }
+
+                    this.referenceEntity = res.data;
+
+                    this.createdByName = res.data.createdBy;
+                    this.createdAt = res.data.createdAt;
+                    this.selectedDept = res.data.departmentId;
+                    this.selectedReftype=res.data.referenceType;
+                    this.content = res.data.content;
+                    this.refName = res.data.title;
+                })
                 // var d = new Date();
                 // this.createdByName = '张三';
                 // this.createdAt = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
@@ -140,40 +156,94 @@
                 // this.refName = '廉政资料-new-name';
             },
             save(){
-                // 保存数据
-                history.go(this.returnBack);
-                var obj = {
-                          	"title":this.refName,
-                          	"type":this.selectedReftype,
-                          	"departmentId":this.selectedDept,
-                            "departmentName":this.selectedDeptName,
-                          	"project":"",
-                          	"projectName":"",
-                          	"content":this.content,
-                            "createdById":this.createdByName,
-                          	"createdByName":this.createdByName,
-                          	"createdAt":this.createdAt
-                          };
-                this.$api.post('reference/addOrUpdate',obj,res=>{})
-                history.go(-1);
+                if(!this.selectedDept){
+                    this.$message("请选择部门")
+                    return false;
+                }
+
+                if(!this.selectedReftype){
+                    this.$message("请选择资料类型")
+                    return false;
+                }
+
+                if(!this.refName){
+                    this.$message("请输入资料名称")
+                    return false;
+                }
+
+                // 保存
+                let data = null;
+                let fileIds = [];
+                for(var i=0; i<this.fileRes.length; i++){
+                    fileIds.push(this.fileRes[i].lianzhengFileId);
+                }
+
+                if(this.referenceEntity){
+                    this.referenceEntity.department = this.selectedDept;
+                    this.referenceEntity.referenceType = this.selectedReftype;
+                    this.referenceEntity.title = this.refName;
+                    this.referenceEntity.content = this.content;
+
+                    data = this.referenceEntity;
+                    data.fileIds = fileIds;
+                }
+                else{
+                    data = {
+                        "title":this.refName,
+                        "type": 1,
+                        "referenceType": this.selectedReftype,
+                        "departmentId":this.selectedDept,
+                        "departmentName":this.selectedDeptName,
+                        "project":"",
+                        "projectName":"",
+                        "content":this.content,
+                        "createdById":this.createdByName,
+                        "createdByName":this.createdByName,
+                        "createdAt":this.createdAt,
+                        "fileIds": fileIds
+                    };
+                }
+
+                this.$api.post('reference/addOrUpdate',data,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("保存失败")
+                        return false;
+                    }
+
+                    this.$message("保存成功")
+                    history.go(this.returnBack);
+                })
             },
             cancel(){
                 history.go(this.returnBack);
             },
 
             //附件相关
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
+            removeFile(file){
+                this.$api.get('file/delete',{id: this.fileMap[file.uid]}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+
+                    this.fileRes = this.fileRes.filter(item=>item.lianzhengFileId == this.fileMap[file.uid]);
+                    this.$message("删除成功")
+                    return true;
+                })
             },
-            handlePreview(file) {
-                console.log(file);
+            uploadFile(data){
+                let param = new FormData(); //创建form对象
+                param.append('file',data.file);
+
+                this.$api.post('file/upload',param, res=>{
+                    let filedata = res.data;
+                    this.fileRes.push(filedata);
+
+                    this.fileMap[data.file.uid] = filedata.lianzhengFileId;
+
+                    return false;
+                })
             },
-            handleExceed(files, fileList) {
-                this.$message.warning(`共选择了 ${files.length + fileList.length} 个文件`);
-            },
-            beforeRemove(file, fileList) {
-                return this.$confirm(`确定移除 ${ file.name }？`);
-            }
         }
     }
 </script>

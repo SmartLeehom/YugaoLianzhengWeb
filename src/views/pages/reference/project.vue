@@ -117,7 +117,13 @@
             },
 
             queryRefList(){
-                console.log(this.selectedProject + '--' + this.selectedReftype + '--' + this.keyPattern);
+                //console.log(this.selectedProject + '--' + this.selectedReftype + '--' + this.keyPattern);
+                this.$api.get('reference/findList?type=1&page=1&referenceType='+this.selectedReftype+'&size=10&pattern='+this.keyPattern,null,res=> {
+                    this.refData = res.list;
+                    this.pageIndex = res.pagebar.page;
+                    this.totalSize = res.pagebar.size;
+                    this.totalPage = res.pagebar.total;
+                })
             },
             addRef(){
                 this.$router.push({

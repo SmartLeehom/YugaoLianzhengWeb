@@ -147,11 +147,25 @@
         <el-button type="danger" @click="addOrUpdateDongtai()">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialogPdfVisible" :append-to-body="true" class="preview-pdf">
+      <p class="arrow" style="text-align: center">
+        <!-- // 上一页 -->
+        <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+        <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pageCount}}</span>
+        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+      </p>
+      <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+    import pdf from 'vue-pdf'
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "dongtaiMgmt",
         data(){
             return {
@@ -174,6 +188,10 @@
                 },
                 autoUpload: false,
                 editEntity: null,
+                currentPage: 0, // pdf文件页码
+                pdfPageCount: 0, // pdf文件总页数
+                dialogPdfVisible: false,
+                pdfUrl: '',
             }
         },
         mounted(){
@@ -228,7 +246,11 @@
             },
             // 预览
             viewDetail(id){
+                console.log(id);
 
+                this.dialogPdfVisible = true;
+
+                this.pdfUrl = pdf.createLoadingTask("http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf")
             },
             // 编辑
             edit(id){
@@ -413,7 +435,23 @@
                 this.$refs.fileUpload.clearFiles();
 
                 this.dialogFormVisible = false;
-            }
+            },
+            changePdfPage(val) {
+                // console.log(val)
+                if (val === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                    // console.log(this.currentPage)
+                }
+                if (val === 1 && this.currentPage < this.pageCount) {
+                    this.currentPage++;
+                    // console.log(this.currentPage)
+                }
+            },
+
+            // pdf加载时
+            loadPdfHandler(e) {
+                this.currentPage = 1; // 加载的时候先加载第一页
+            },
         }
     }
 </script>
