@@ -175,6 +175,7 @@
                 dialogFormVisible: false,
                 currentPage: 0, // pdf文件页码
                 pdfPageCount: 0, // pdf文件总页数
+                fileUrls: [],
             }
         },
         mounted () {
@@ -198,7 +199,7 @@
 
                 this.dialogFormVisible = true;
 
-                this.pdfUrl = pdf.createLoadingTask("http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf")
+                this.pdfUrl = pdf.createLoadingTask(this.fileUrls[this.activePhoto])
                 //this.pdfUrl = "http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf";
             },
             changePhoto (index) {
@@ -212,10 +213,11 @@
                 this.changePhoto( this.activePhoto-1 >= 0 ? this.activePhoto-1 : this.photos.length-1 )
             },
             getDongtai(){
-                this.$api.get('dongtai/findList',{page: 1, size: 4}, res=>{
+                this.$api.get('dongtai/findList',{page: 1, size: 4, status: 1}, res=>{
                     this.photos = [];
                     this.titles = [];
                     this.dongtaiIds = [];
+                    this.fileUrls = [];
                     let tempList = res.list;
 
                     for(let i=0; i<tempList.length; i++){
@@ -223,6 +225,7 @@
                         this.photos.push(baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=2");
                         this.titles.push(item.title);
                         this.dongtaiIds.push(item.lianzhengDongtaiId);
+                        this.fileUrls.push(baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=1");
                     }
 
                     this.currentTitle = this.titles[0];

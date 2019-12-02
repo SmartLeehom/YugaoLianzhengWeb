@@ -57,6 +57,9 @@
     import baseUrl from "../../../utils/baseUrl";
     import pdf from 'vue-pdf'
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "refmodule",
         data(){
             return {

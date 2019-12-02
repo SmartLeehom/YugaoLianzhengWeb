@@ -7,8 +7,8 @@ var env = process.env.NODE_ENV === 'development' ? 'development'
 switch (env) {
     case 'development':
         baseUrl = {
+          localUrl: 'http://localhost:8080/',
           fileUrl: 'http://localhost:8080/lianzheng/api/file/preview?',
-          localUrl: 'http://localhost:8080/yugaoapi/',
           //localUrl: 'http://222.180.168.215:8081/yugaoapi/',
             // localUrl: 'http://zxsj.zdwa.com/yugaoapi/',
             // localUrl: 'http://topiano.mynatapp.cc/yugaoapi/',
@@ -21,7 +21,7 @@ switch (env) {
         break
     case 'test': // 注意这里的名字要和步骤二中设置的环境名字对应起来
         baseUrl = {
-          fileUrl: 'http://localhost:8080/lianzheng/api/file/preview?',
+            fileUrl: 'http://localhost:8080/',
             // localUrl: 'https://lujar.imdo.co/yugaoapi',
             // localUrl: 'http://localhost:8080/yugaoapi/',
             localUrl: 'http://zxsj.zdwa.com/yugaoapi/',
@@ -30,7 +30,7 @@ switch (env) {
         break
     case 'production':
         baseUrl = {
-          fileUrl: 'http://localhost:8080/lianzheng/api/file/preview?',
+          fileUrl: 'http://localhost:8080/',
             localUrl: 'http://222.180.168.215:8081/yugaoapi/',
             engineerUrl: 'http://222.180.168.215:9104/'
         } // 生产环境url

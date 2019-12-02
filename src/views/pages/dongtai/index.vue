@@ -4,6 +4,17 @@
       <span class="reference-department-title">廉政动态</span>
     </div>
     <div class="reference-module-table">
+      <el-dialog :visible.sync="dialogFormVisible" :append-to-body="true" class="preview-pdf">
+        <p class="arrow" style="text-align: center">
+          <!-- // 上一页 -->
+          <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+          <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
+          <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+        </p>
+        <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+      </el-dialog>
+
+
       <div class="reference-module-item-box" style="max-height: 540px; overflow: scroll">
         <div class="reference-module-item" v-for="(item_f1, index_f1) in moduleData" :key="index_f1" @click="showdetail(item_f1)">
           <div class="reference-module-item-img">
@@ -41,7 +52,11 @@
 
 <script>
   import baseUrl from "../../../utils/baseUrl";
+  import pdf from 'vue-pdf'
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "refmodule",
         data(){
             return {
@@ -49,6 +64,10 @@
                 totalPage: 1,
                 pageIndex: 1,
                 pageSize: 10,
+                pdfUrl: null,
+                dialogFormVisible: false,
+                currentPage: 0, // pdf文件页码
+                pdfPageCount: 0, // pdf文件总页数
             }
         },
         mounted(){
@@ -61,7 +80,7 @@
 
                     for(let i=0; i<tempList.length; i++){
                         var item = tempList[i];
-                        this.moduleData.push({id:item.lianzhengDongtaiId, img: baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=2", title: item.title, content: item.content, createdAt: item.createdAt});
+                        this.moduleData.push({id:item.lianzhengDongtaiId, img: baseUrl.fileUrl+"businessId="+item.lianzhengDongtaiId+"&moduleId=2", title: item.title, content: item.content, createdAt: item.createdAt, fileUrl: baseUrl.fileUrl + "businessId="+item.lianzhengDongtaiId+"&moduleId=1"});
                     }
 
                     this.currentTitle = this.titles[0];
@@ -79,7 +98,25 @@
                 this.getData()
             },
             showdetail(item){
-                console.log(item.id);
+                this.dialogFormVisible = true;
+                this.pdfUrl = pdf.createLoadingTask(item.fileUrl)
+            },
+
+            changePdfPage(val) {
+                // console.log(val)
+                if (val === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                    // console.log(this.currentPage)
+                }
+                if (val === 1 && this.currentPage < this.pdfPageCount) {
+                    this.currentPage++;
+                    // console.log(this.currentPage)
+                }
+            },
+
+            // pdf加载时
+            loadPdfHandler(e) {
+                this.currentPage = 1; // 加载的时候先加载第一页
             },
         }
     }

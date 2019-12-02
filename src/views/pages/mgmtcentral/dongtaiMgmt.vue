@@ -21,7 +21,7 @@
         </el-table-column>
         <el-table-column prop="action" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="viewDetail(scope.row.id)">预览</el-button>
+            <el-button type="text" size="small" @click="viewDetail(scope.row.fileUrl)">预览</el-button>
             <el-button
               class="del_danger"
               type="text"
@@ -94,32 +94,13 @@
           :file-list="imgList"
           ref="imgUpload"
           :limit="1"
-          :http-request="uploadFile">
+          :http-request="uploadFile"
+          :before-remove="handleRemove">
           <i slot="default" class="el-icon-plus"></i>
-          <div slot="file" slot-scope="{file}">
-            <img
-              class="el-upload-list__item-thumbnail"
-              :src="file.url" alt=""
-            >
-            <span class="el-upload-list__item-actions">
-              <span
-                class="el-upload-list__item-preview"
-                @click="handlePictureCardPreview(file)"
-              >
-                <i class="el-icon-zoom-in"></i>
-              </span>
-
-              <span
-                class="el-upload-list__item-delete"
-                @click="handleRemove(file)"
-              >
-                <i class="el-icon-delete"></i>
-              </span>
-            </span>
-          </div>
         </el-upload>
         <el-dialog width="25%" :visible.sync="dialogImgVisible" :append-to-body="true">
-          <img width="100%" :src="dialogImageUrl" alt="">
+          <img width="100%" :src="dialogImageUrl" alt="" v-if="!imgRes || !imgRes.url">
+          <img width="100%" :src="imgSrc" alt="" v-else>
         </el-dialog>
       </div>
 
@@ -152,16 +133,17 @@
       <p class="arrow" style="text-align: center">
         <!-- // 上一页 -->
         <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
-        <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pageCount}}</span>
-        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+        <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
+        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
       </p>
-      <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+      <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
     </el-dialog>
   </div>
 </template>
 
 <script>
     import pdf from 'vue-pdf'
+    import baseUrl from "../../../utils/baseUrl";
     export default {
         components:{
             pdf:pdf
@@ -192,6 +174,7 @@
                 pdfPageCount: 0, // pdf文件总页数
                 dialogPdfVisible: false,
                 pdfUrl: '',
+                imgSrc: '',
             }
         },
         mounted(){
@@ -222,13 +205,20 @@
 
                     for(var i=0; i<res.list.length; i++){
                         var item = res.list[i];
+                        var fileUrl = '';
+                        if(item.fileEntity.length > 0){
+                            fileUrl = baseUrl.localUrl + item.fileEntity[0].url;
+                        }
+                        console.log(fileUrl)
+
                         var obj={
                             order: order,
                             title: item.title,
                             statusDesc: item.status.toString() == "1" ? "已发布" : "未发布",
                             status: item.status ? parseInt(item.status) : 0,
                             createdAt: item.createdAt.split(' ')[0],
-                            id: item.lianzhengDongtaiId
+                            id: item.lianzhengDongtaiId,
+                            fileUrl: fileUrl
                         };
                         this.pageData.push(obj);
                         order ++;
@@ -245,23 +235,37 @@
                 this.getData()
             },
             // 预览
-            viewDetail(id){
-                console.log(id);
-
+            viewDetail(fileUrl){
                 this.dialogPdfVisible = true;
 
-                this.pdfUrl = pdf.createLoadingTask("http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf")
+                this.pdfUrl = pdf.createLoadingTask(fileUrl)
             },
             // 编辑
             edit(id){
                 // 初始化数据
                 this.$api.get('dongtai/findById',{id: id}, res=>{
+
                     this.editEntity = res.data;
 
                     this.dongtaiContent = this.editEntity.content;
                     this.dongtaiTitle = this.editEntity.title;
 
                     this.dialogFormVisible = true;
+
+                    // 获取封面图片信息
+                    this.$api.get('file/list',{businessId: id, moduleId: 2, createdBy: null, page: 1, size: 1}, res=>{
+                        this.imgRes = res.list[0];
+                        this.imgList = res.list;
+
+                        this.$api.get('file/list',{businessId: id, moduleId: 1, createdBy: null, page: 1, size: 1}, res=>{
+                            this.fileRes = res.list[0];
+                            this.fileList = res.list;
+
+
+                        })
+                    })
+
+                    // 获取附件信息
                 })
             },
             // 删除动态
@@ -329,7 +333,7 @@
                         return;
                     }
 
-                    imgRes = null;
+                    this.imgRes = null;
                     this.$message("删除成功")
                     return false;
                 })
@@ -349,6 +353,8 @@
             uploadFile(data){
                 let param = new FormData(); //创建form对象
                 param.append('file',data.file);
+
+                console.log(data.file);
 
                 this.$api.post('file/upload',param, res=>{
                     console.log(res.data);
@@ -429,6 +435,7 @@
                 this.dongtaiTitle = null
                 this.dongtaiContent = null
                 this.editEntity = null
+                this.imgSrc = null
 
 
                 this.$refs.imgUpload.clearFiles();
@@ -442,7 +449,7 @@
                     this.currentPage--;
                     // console.log(this.currentPage)
                 }
-                if (val === 1 && this.currentPage < this.pageCount) {
+                if (val === 1 && this.currentPage < this.pdfPageCount) {
                     this.currentPage++;
                     // console.log(this.currentPage)
                 }
