@@ -76,8 +76,6 @@
         methods:{
             getData(){
                 this.pageData=[
-                    {order: 1, userName: '张三', statusDesc: '正常', status: 1, userRole: '管理员', id:1},
-                    {order: 1, userName: '王五', statusDesc: '禁用', status: 0, userRole: '管理员', id:1}
                 ]
             },
             sizeChangeHandle(val) {
