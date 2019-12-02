@@ -56,7 +56,7 @@
 
       <el-dialog title="廉政资料模板" :visible.sync="dialogFormVisible" :append-to-body="true" custom-class="mgmt-central-report-detail">
         <div>
-          <span class="dialog-title">模板标题</span>
+          <span class="dialog-title" :v-model="title">模板标题</span>
           <el-input v-model="reportTitle" class="small-dialog-value" placeholder="请输入模板标题"></el-input>
         </div>
 
@@ -65,9 +65,12 @@
 
           <el-upload
             accept=".pdf"
+            ref="fileUpload"
+            :before-remove="removeFile"
+            :http-request="uploadFile"
+            :headers="fileHeaders"
             class="upload-demo"
             action="#"
-            :auto-upload="false"
             :limit="1"
             :file-list="fileList">
             <el-button size="small" >点击上传</el-button>
@@ -76,8 +79,8 @@
         </div>
 
         <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="danger" @click="addReport()">确 定</el-button>
+        <el-button type="danger" @click="cancel()">取 消</el-button>
+        <el-button type="danger" @click="save()">确 定</el-button>
       </span>
       </el-dialog>
 
@@ -95,7 +98,13 @@
                 totalPage: 0,
                 pageData: [],
                 dialogFormVisible: false,
-                fileList: []
+                fileList: [],
+                title: '',
+                moduleEntity: null,
+                fileHeaders:{
+                    "Content-Type":"multipart/form-data"
+                },
+                fileRes: null,
             }
         },
         mounted(){
@@ -103,10 +112,9 @@
         },
         methods:{
             getData(){
-                this.pageData=[
-                    {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},
-                    {order: 1, title: '动态1', statusDesc: '草稿', status: 0, createdAt: '2019-11-23', id:1}
-                ]
+                this.$api.get('file/list?moduleId=5&page='+this.pageIndex+'&size='+this.pageSize, null, res=>{
+
+                })
             },
             sizeChangeHandle(val) {
                 this.pageSize = val
@@ -128,7 +136,77 @@
             },
             withdraw(id){
 
-            }
+            },
+            save(){
+                if(!this.title || this.title.length<1){
+                    this.$message('请输入标题');
+                    return false;
+                }
+                if(this.fileList.length < 1){
+                    this.$message('请上传资料模板附件');
+                    return false;
+                }
+
+                let data = {};
+                if(this.moduleEntity){
+                    data = this.moduleEntity;
+                    data.title = this.title;
+                    data.fileId = data.lianzhengFileId;
+                }
+                else{
+                    data = this.moduleEntity;
+                    data.title = this.title;
+                    data.fileId = this.fileList[0].lianzhengFileId;
+                }
+
+                this.$api.get('means/save', data, res=>{
+                    if(res.code.toString() != '0'){
+                        this.$message('保存失败');
+                        return false;
+                    }
+
+                    this.$message('保存成功');
+                    this.clear();
+                    this.dialogFormVisible = false;
+                    history.go(-1);
+                });
+
+
+            },
+            cancel(){
+                this.clear();
+                this.dialogFormVisible = false;
+                history.go(-1);
+            },
+            clear(){
+                this.moduleEntity = null;
+                this.title = null;
+                this.fileList = [];
+            },
+            //附件相关
+            removeFile(file){
+                this.$api.get('file/delete',{id: file.lianzhengFileId}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+
+                    this.fileList = this.fileList.filter(item=>item.lianzhengFileId == file.lianzhengFileId);
+                    this.$message("删除成功")
+                    return true;
+                })
+            },
+            uploadFile(data){
+                let param = new FormData(); //创建form对象
+                param.append('file',data.file);
+
+                this.$api.post('means/upload',param, res=>{
+                    let filedata = res.data;
+                    this.fileList.push(filedata);
+
+                    return false;
+                })
+            },
         }
     }
 </script>
