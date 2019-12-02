@@ -128,7 +128,7 @@
 
                     this.createdByName = res.data.createdBy;
                     this.createdAt = res.data.createdAt;
-                    this.selectedProject = res.data.project;
+                    this.selectedProject = res.data.project.toString();
                     this.selectedReftype=res.data.referenceType;
                     this.content = res.data.content;
                     this.refName = res.data.title;

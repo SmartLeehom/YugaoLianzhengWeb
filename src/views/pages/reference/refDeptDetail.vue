@@ -90,10 +90,11 @@
             }
         },
         mounted(){
-            console.log(this.$route.params)
             this.returnBack = this.$route.params.returnBack ? this.$route.params.returnBack : -1;
             this.getDepts()
             this.getRefTypes()
+
+            console.log('------------------------------------11111')
             if(this.$route.params.id){
                 this.getDetail(this.$route.params.id)
             }
@@ -143,7 +144,7 @@
                     this.createdByName = res.data.createdBy;
                     this.createdAt = res.data.createdAt;
                     this.selectedDept = res.data.departmentId;
-                    this.selectedReftype=res.data.referenceType;
+                    this.selectedReftype=res.data.referenceType.toString();
                     this.content = res.data.content;
                     this.refName = res.data.title;
 
@@ -152,13 +153,6 @@
                         this.fileList = res.list;
                     })
                 })
-                // var d = new Date();
-                // this.createdByName = '张三';
-                // this.createdAt = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-                // this.selectedDept = 3;
-                // this.selectedReftype=3;
-                // this.content = '廉政资料说明-new';
-                // this.refName = '廉政资料-new-name';
             },
             save(){
                 if(!this.selectedDept){

@@ -108,6 +108,8 @@
             },
             download(id){
                 //下载附件
+                var url = baseUrl.serverUrl+'/file/download?businessId='+id+'&moduleId=5';
+                window.location.href = url;
             },
             changePdfPage(val) {
                 // console.log(val)
