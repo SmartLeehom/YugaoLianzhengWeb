@@ -184,11 +184,14 @@
                 }
 
                 if(this.referenceEntity){
-                    this.referenceEntity.department = this.selectedDept;
+                    this.referenceEntity.departmentId = this.selectedDept;
+                    this.referenceEntity.departmentName = this.selectedDeptName;
                     this.referenceEntity.referenceType = this.selectedReftype;
                     this.referenceEntity.title = this.refName;
                     this.referenceEntity.content = this.content;
                     this.referenceEntity.type = "1";
+                    this.referenceEntity.createdById = "";
+                    this.referenceEntity.createdByName = this.createdByName;
 
                     data = this.referenceEntity;
                     data.fileIds = fileIds;
