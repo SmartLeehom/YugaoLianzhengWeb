@@ -98,7 +98,7 @@
                 ]
             },
             getRefTypes(){
-                this.$api.get('referenceFileType/findList?referenceTypeId=1',null,res=>{
+                this.$api.get('referenceFileType/findList?referenceTypeId=3',null, res=>{
                 this.refTypes=res.list
               })
                 // this.refTypes = [

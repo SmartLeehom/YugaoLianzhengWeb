@@ -24,7 +24,7 @@
 
     <div class="reference-department-list">
       <el-table :data="refData" class="table-wrap" style="width: 100%" max-height="460px">
-        <el-table-column prop="type" label="资料类型" width="200px">
+        <el-table-column prop="typeName" label="资料类型" width="200px">
         </el-table-column>
         <el-table-column prop="title" label="资料名称" width="220px">
         </el-table-column>
@@ -127,11 +127,17 @@
             queryRefList(){
                 console.log(this.selectedDept + '--' + this.selectedReftype + '--' + this.keyPattern);
                 this.$api.get('reference/findList?type=0&page=1&referenceType='+this.selectedReftype+'&size=10&pattern='+this.keyPattern,null,res=>{
-                this.refData=res.list;
-                this.pageIndex=res.pagebar.page;
-                this.totalSize=res.pagebar.size;
-                this.totalPage=res.pagebar.total;
-              })
+                  this.refData=res.list;
+                  for(let i=0; i<this.refData.length; i++){
+                      if(this.refData[i].type.toString() == "0"){
+                          this.refData[i].typeName = "廉政专题教育会图文资料"
+                      }
+                  }
+                  console.log(this.refData)
+                  this.pageIndex=res.pagebar.page;
+                  this.pageSize=res.pagebar.size;
+                  this.totalPage=res.pagebar.total;
+                })
             },
             addRef(){
                 this.$router.push({
@@ -141,11 +147,16 @@
             },
             getRefData(){
               this.$api.get('reference/findList?type=0&page=1&size=10',null,res=>{
-              this.refData=res.list;
-              this.pageIndex=res.pagebar.page;
-              this.totalSize=res.pagebar.size;
-              this.totalPage=res.pagebar.total;
-            })
+                this.refData=res.list;
+                  for(let i=0; i<this.refData.length; i++){
+                      if(this.refData[i].type.toString() == "0"){
+                          this.refData[i].typeName = "廉政专题教育会图文资料"
+                      }
+                  }
+                this.pageIndex=res.pagebar.page;
+                this.pageSize=res.pagebar.size;
+                this.totalPage=res.pagebar.total;
+              })
                 // this.refData=[
                 //     {lianzhengReferenceId: 1, typeName: "廉政专题教育会图文资料", title: "廉政资料1", deptName: "一部", createdByName: "张三", createdAt: "2019-11-26"}
                 // ]

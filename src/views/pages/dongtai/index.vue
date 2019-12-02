@@ -123,6 +123,7 @@
 </script>
 
 <style scoped>
+  @import url("../../../assets/css/ref-dept.css");
   .reference-module-item{
     height: 100px;
     margin-top: 15px;

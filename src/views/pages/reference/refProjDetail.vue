@@ -38,7 +38,7 @@
 
         <!--<textarea v-model="content" class="input-text full-widith"  style="max-height: 200px; min-height: 200px; resize: none"></textarea>-->
       </div>
-      <div style="margin-top: 15px;">
+      <div style="margin-top: 15px;" v-if="isEdit">
         <span class="query-title" style="vertical-align: top; float: left; margin-right: 10px">附件列表</span>
         <el-upload
           :before-remove="removeFile"

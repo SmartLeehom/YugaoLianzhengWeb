@@ -95,6 +95,7 @@
                 totalPage: 0,
                 pageData: [],
                 dialogFormVisible: false,
+                fileList: []
             }
         },
         mounted(){

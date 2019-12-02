@@ -49,7 +49,7 @@
           action="#"
           :http-request="uploadFile"
           :file-list="fileList">
-          <el-button size="small" >点击上传</el-button>
+          <el-button size="small" v-if="isEdit">点击上传</el-button>
         </el-upload>
       </div>
     </div>
@@ -146,6 +146,11 @@
                     this.selectedReftype=res.data.referenceType;
                     this.content = res.data.content;
                     this.refName = res.data.title;
+
+                    // 获取附件列表
+                    this.$api.get('file/list',{businessId: id, moduleId: 3, createdBy: null, page: 1, size: 100}, res=>{
+                        this.fileList = res.list;
+                    })
                 })
                 // var d = new Date();
                 // this.createdByName = '张三';
@@ -220,7 +225,8 @@
 
             //附件相关
             removeFile(file){
-                this.$api.get('file/delete',{id: this.fileMap[file.uid]}, res=>{
+                let id = this.fileMap[file.uid] ? this.fileMap[file.uid] : file.lianzhengFileId;
+                this.$api.get('file/delete',{id: id}, res=>{
                     if(res.code.toString() != "0"){
                         this.$message("删除失败")
                         return false;

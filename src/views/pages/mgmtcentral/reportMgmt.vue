@@ -160,6 +160,12 @@
                 this.periodStart=res.data.fromDate;
                 this.periodEnd=res.data.toDate;
                 this.dialogFormVisible=true;
+
+                // 获取附件
+                  this.$api.get('file/list',{businessId: id, moduleId: 4, createdBy: null, page: 1, size: 1}, res=>{
+                      this.fileRes = res.list[0];
+                      this.fileList = res.list;
+                  })
               })
             },
             deleteDt(id){
