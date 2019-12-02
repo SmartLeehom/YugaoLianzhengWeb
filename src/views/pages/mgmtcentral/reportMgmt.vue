@@ -55,7 +55,7 @@
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
 
-      <el-dialog title="廉政报告" :visible.sync="dialogFormVisible" :append-to-body="true" custom-class="mgmt-central-report-detail">
+      <el-dialog title="廉政报告" :visible.sync="dialogFormVisible" :append-to-body="true" custom-class="mgmt-central-report-detail" >
         <div>
           <span class="dialog-title">报告标题</span>
           <el-input v-model="reportTitle" class="small-dialog-value" placeholder="请输入文章标题"></el-input>
@@ -94,7 +94,7 @@
         </div>
 
         <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="danger" @click="cancel()">取 消</el-button>
         <el-button type="danger" @click="addReport()">确 定</el-button>
       </span>
       </el-dialog>
@@ -121,6 +121,7 @@
                 },
                 autoUpload: false,
                 fileRes: null,
+                entity: null,
             }
         },
         mounted(){
@@ -129,17 +130,17 @@
         methods:{
             getData(){
                 this.$api.get('report/list?type=0&page=1&size=10',null,res=>{
-                  this.pageData=res.list;
-                  let order = (this.pageIndex-1)*this.pageSize+1;
-                  for(var i=0; i<this.pageData.length; i++){
-                      this.pageData[i].order = order;
-                      order ++;
-                  }
+                    this.pageData=res.list;
+                    let order = (this.pageIndex-1)*this.pageSize+1;
+                    for(var i=0; i<this.pageData.length; i++){
+                        this.pageData[i].order = order;
+                        order ++;
+                    }
 
-                  this.pageIndex=res.pagebar.page;
-                  this.totalSize=res.pagebar.size;
-                  this.totalPage=res.pagebar.total;
-              })
+                    this.pageIndex=res.pagebar.page;
+                    this.pageSize=res.pagebar.size;
+                    this.totalPage=res.pagebar.total;
+                })
                 // this.pageData=[
                 //     {order: 1, title: '动态1', statusDesc: '已发布', status: 1, createdAt: '2019-11-23', id:1},
                 //     {order: 1, title: '动态1', statusDesc: '草稿', status: 0, createdAt: '2019-11-23', id:1}
@@ -155,70 +156,104 @@
                 this.getData()
             },
             viewDetail(id){
-              this.$api.get('report/detail?id='+id,null,res=>{
-                this.reportTitle=res.data.reportTitle;
-                this.periodStart=res.data.fromDate;
-                this.periodEnd=res.data.toDate;
-                this.dialogFormVisible=true;
+                this.$api.get('report/detail?id='+id,null,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("查询失败");
+                        return;
+                    }
+                    this.entity = res.data;
+                    this.reportTitle=res.data.reportTitle;
+                    this.periodStart=res.data.fromDate;
+                    this.periodEnd=res.data.toDate;
+                    this.dialogFormVisible=true;
 
-                // 获取附件
-                  this.$api.get('file/list',{businessId: id, moduleId: 4, createdBy: null, page: 1, size: 1}, res=>{
-                      this.fileRes = res.list[0];
-                      this.fileList = res.list;
-                  })
-              })
+                    // 获取附件
+                    this.$api.get('file/list',{businessId: id, moduleId: 4, createdBy: null, page: 1, size: 1}, res=>{
+                        this.fileRes = res.list[0];
+                        this.fileList = res.list;
+                    })
+                })
             },
             deleteDt(id){
-              this.$api.get('report/delete?id='+id,null,res=>{
-                if(res.code.toString() != "0"){
-                    this.$message("删除失败")
-                    return false;
-                }
-                this.$message("删除成功");
+                this.$api.get('report/delete?id='+id,null,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("删除失败")
+                        return false;
+                    }
+                    this.$message("删除成功");
 
-                this.getData();
-              })
+                    this.getData();
+                })
             },
             publish(id){
-              this.$api.get('report/publish?id='+id,null,res=>{
-                if(res.code.toString() != "0"){
-                    this.$message("发布失败")
-                    return false;
-                }
-                this.$message("发布成功");
+                this.$api.get('report/publish?id='+id,null,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("发布失败")
+                        return false;
+                    }
+                    this.$message("发布成功");
 
-                this.getData();
-              })
+                    this.getData();
+                })
             },
             withdraw(id){
-              this.$api.get('report/cancel?id='+id,null,res=>{
-                if(res.code.toString() != "0"){
-                    this.$message("取消失败")
-                    return false;
-                }
-                this.$message("取消成功");
+                this.$api.get('report/cancel?id='+id,null,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("取消失败")
+                        return false;
+                    }
+                    this.$message("取消成功");
 
-                this.getData();
-              })
+                    this.getData();
+                })
             },
             addReport(){
-                this.dialogFormVisible = false;
-                var obj = {
-                  "reportTitle":this.reportTitle,
-                  "fromDate":this.periodStart,
-                  "toDate":this.periodEnd,
-                  "createUserId":1,
-                  "createUserName":"yangrenshan"
-                };
-                this.$api.post('report/save',obj,res=>{
-                  if(res.code.toString() != "0"){
-                      this.$message("新增失败")
-                      return false;
-                  }
-                  this.$message("新增成功");
-
-                  this.getData();
+                if(!this.reportTitle || this.reportTitle.length < 1){
+                    this.$message("请输入报告标题")
+                    return;
+                }
+                if(!this.periodStart || !this.periodEnd){
+                    this.$message("请选择报告周期")
+                    return;
+                }
+                if(!this.fileRes){
+                    this.$message("请上传附件")
+                    return;
+                }
+                let data = {};
+                if(this.entity){
+                    data = this.entity;
+                    data.fileId = this.fileRes.lianzhengFileId
+                    data.reportTitle = this.reportTitle
+                    data.fromDate = this.periodStart
+                    data.toDate = this.periodEnd
+                    data.createUserId = 1
+                    data.createUserName = "admin"
+                }
+                else{
+                    data = {
+                        "reportTitle":this.reportTitle,
+                        "fromDate":this.periodStart,
+                        "toDate":this.periodEnd,
+                        "createUserId":1,
+                        "createUserName":"admin",
+                        fileId: this.fileRes.lianzhengFileId
+                    };
+                }
+                this.$api.post('report/save',data,res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("新增失败")
+                        return false;
+                    }
+                    this.$message("新增成功");
+                    this.getData();
+                    this.dialogFormVisible = false;
+                    this.clear();
                 })
+            },
+            cancel(){
+                this.dialogFormVisible = false;
+                this.clear()
             },
             removeFile(){
                 this.$api.get('file/delete',{id: this.fileRes.lianzhengFileId}, res=>{
@@ -247,6 +282,14 @@
 
                     return false;
                 })
+            },
+
+            clear(){
+                this.entity = null;
+                this.reportTitle=null;
+                this.periodStart=null;
+                this.periodEnd=null;
+                this.fileRes = [];
             },
         }
     }

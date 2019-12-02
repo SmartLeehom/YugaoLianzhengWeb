@@ -68,7 +68,7 @@
                 logo: require('../../assets/img/logo.png'),
                 userLogo: require('../../assets/img/userlogo.jpg'),
                 activeIndex: 'home',
-                userName: "用户名",
+                userName: "管理员",
                 logoutPopover: false,
             }
         },

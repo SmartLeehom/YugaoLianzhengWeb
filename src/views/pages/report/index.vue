@@ -14,7 +14,7 @@
     </el-dialog>
     <div class="reference-module-table">
       <el-table :data="moduleData" class="table-wrap" style="width: 100%" max-height="520px">
-        <el-table-column prop="reportId" label="报告编号" width="200px">
+        <el-table-column prop="order" label="报告编号" width="200px">
         </el-table-column>
         <el-table-column prop="reportTitle" label="模板名称" width="350px">
         </el-table-column>
@@ -79,7 +79,19 @@
         methods:{
             getData(){
               this.$api.get('report/list?type=0&page=1&size=10',null,res=>{
+                  if(res.code != "0"){
+                      this.$message("查询失败")
+                      return
+                  }
+
               this.moduleData=res.list;
+
+                  var order = (this.pageIndex-1)*this.pageSize + 1;
+                  for(var i=0; i<this.moduleData.length; i++){
+                      this.moduleData[i].order = order;
+                      order ++;
+                  }
+
               this.pageIndex=res.pagebar.page;
               this.totalSize=res.pagebar.size;
               this.totalPage=res.pagebar.total;
