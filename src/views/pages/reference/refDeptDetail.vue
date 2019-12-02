@@ -190,6 +190,8 @@
                     this.referenceEntity.title = this.refName;
                     this.referenceEntity.content = this.content;
                     this.referenceEntity.type = "1";
+                    this.referenceEntity.createdById = "";
+                    this.referenceEntity.createdByName = this.createdByName;
 
                     data = this.referenceEntity;
                     data.fileIds = fileIds;
