@@ -255,7 +255,8 @@
 
                   this.lzReferenceModules = [];
                   for(let i=0; i<res.list.length; i++){
-                      var fileUrl = baseUrl.localUrl + res.list[i].url;
+                      var fileUrl = baseUrl.serverUrl+'/file/download?businessId='+ res.list[i].lianzhengFileId+'&moduleId=5';
+
                       this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
                   }
               })
@@ -267,13 +268,7 @@
                 //     {title:"资料模板5", isRead: true}
                 // ]
             },
-            // 查看资料详情
-            lookReference(reference){
-                this.$router.push({
-                    name: "reference",
-                    params: {id: reference.lianzhengReferenceId, type: reference.type, title: reference.title, isEdit: 0}
-                })
-            },
+
             // 待办、待阅事项
             getWait2Do(){
                 this.$api.get('undo/findList?page=1&size=4',null,res=>{
@@ -329,7 +324,6 @@
             },
 
             lookReference(item_f1) {
-              console.log(item_f1);
               var url = item_f1.fileUrl;
               window.location.href = url;
             },
