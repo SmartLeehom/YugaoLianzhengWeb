@@ -184,7 +184,8 @@
                 }
 
                 if(this.referenceEntity){
-                    this.referenceEntity.department = this.selectedDept;
+                    this.referenceEntity.departmentId = this.selectedDept;
+                    this.referenceEntity.departmentName = this.selectedDeptName;
                     this.referenceEntity.referenceType = this.selectedReftype;
                     this.referenceEntity.title = this.refName;
                     this.referenceEntity.content = this.content;
