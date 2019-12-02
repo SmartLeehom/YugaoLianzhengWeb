@@ -209,7 +209,6 @@
                         if(item.fileEntity.length > 0){
                             fileUrl = baseUrl.localUrl + item.fileEntity[0].url;
                         }
-                        console.log(fileUrl)
 
                         var obj={
                             order: order,

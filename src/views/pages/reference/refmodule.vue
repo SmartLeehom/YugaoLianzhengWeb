@@ -5,7 +5,7 @@
     </div>
     <div class="reference-module-table">
       <el-table :data="moduleData" class="table-wrap" style="width: 100%" max-height="540px">
-        <el-table-column prop="num" label="报告编号" width="200px">
+        <el-table-column prop="order" label="报告编号" width="200px">
         </el-table-column>
         <el-table-column prop="moduleName" label="模板名称" width="280px">
         </el-table-column>
@@ -13,6 +13,12 @@
         </el-table-column>
         <el-table-column prop="action" label="操作" width="158">
           <template slot-scope="scope">
+            <el-button
+              class="edit_green"
+              type="text"
+              size="small"
+              @click="preview(scope.row.fileUrl)"
+            >查阅</el-button>
             <el-button
               class="edit_green"
               type="text"
@@ -34,12 +40,27 @@
         style="text-align: center"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
+
+      <el-dialog :visible.sync="dialogPdfVisible" :append-to-body="true" class="preview-pdf">
+        <p class="arrow" style="text-align: center">
+          <!-- // 上一页 -->
+          <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+          <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
+          <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+        </p>
+        <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+    import pdf from 'vue-pdf'
+    import baseUrl from "../../../utils/baseUrl";
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "refmodule",
         data(){
             return {
@@ -47,6 +68,10 @@
                 totalPage: 1,
                 pageIndex: 1,
                 pageSize: 10,
+                pdfPageCount: 0, // pdf文件总页数
+                dialogPdfVisible: false,
+                pdfUrl: '',
+                currentPage: 0,
             }
         },
         mounted(){
@@ -54,9 +79,23 @@
         },
         methods:{
             getData(){
-                this.moduleData = [
-                    {id: 1, num: 1, moduleName: '模板1', uploadDate: '2010-1-1'}
-                ]
+                this.$api.get('file/list?status=1&moduleId=5&page='+this.pageIndex+'&size='+this.pageSize, null, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("查询数据失败")
+                        return;
+                    }
+
+                    this.moduleData = [];
+                    let order =(this.pageIndex-1)*this.pageSize + 1;
+
+                    console.log(res.list.length);
+                    for(let i=0; i<res.list.length; i++){
+                        var fileUrl = baseUrl.localUrl + res.list[i].url;
+                        console.log(fileUrl);
+                        this.moduleData.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, order: order, moduleName: res.list[i].remarks, uploadDate: res.list[i].updatedAt.split(' ')[0]})
+                    }
+
+                })
             },
             sizeChangeHandle(val) {
                 this.pageSize = val
@@ -69,7 +108,29 @@
             },
             download(id){
                 //下载附件
-            }
+            },
+            changePdfPage(val) {
+                // console.log(val)
+                if (val === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                    // console.log(this.currentPage)
+                }
+                if (val === 1 && this.currentPage < this.pdfPageCount) {
+                    this.currentPage++;
+                    // console.log(this.currentPage)
+                }
+            },
+
+            // pdf加载时
+            loadPdfHandler(e) {
+                this.currentPage = 1; // 加载的时候先加载第一页
+            },
+
+            preview(fileUrl){
+                this.dialogPdfVisible = true;
+
+                this.pdfUrl = pdf.createLoadingTask(fileUrl)
+            },
         }
     }
 </script>

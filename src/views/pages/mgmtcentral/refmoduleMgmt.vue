@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column prop="action" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="viewDetail(scope.row.id)">预览</el-button>
+            <el-button type="text" size="small" @click="viewDetail(scope.row.fileUrl)">预览</el-button>
             <el-button
               class="edit_green"
               type="text"
@@ -57,7 +57,7 @@
       <el-dialog title="廉政资料模板" :visible.sync="dialogFormVisible" :append-to-body="true" custom-class="mgmt-central-report-detail">
         <div>
           <span class="dialog-title" :v-model="title">模板标题</span>
-          <el-input v-model="reportTitle" class="small-dialog-value" placeholder="请输入模板标题"></el-input>
+          <el-input v-model="title" class="small-dialog-value" placeholder="请输入模板标题"></el-input>
         </div>
 
         <div class="dialog-row">
@@ -84,12 +84,26 @@
       </span>
       </el-dialog>
 
+      <el-dialog :visible.sync="dialogPdfVisible" :append-to-body="true" class="preview-pdf">
+        <p class="arrow" style="text-align: center">
+          <!-- // 上一页 -->
+          <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+          <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
+          <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+        </p>
+        <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+    import pdf from 'vue-pdf'
+    import baseUrl from "../../../utils/baseUrl";
     export default {
+        components:{
+            pdf:pdf
+        },
         name: "reportMgmt",
         data(){
             return {
@@ -104,7 +118,10 @@
                 fileHeaders:{
                     "Content-Type":"multipart/form-data"
                 },
-                fileRes: null,
+                pdfPageCount: 0, // pdf文件总页数
+                dialogPdfVisible: false,
+                pdfUrl: '',
+                currentPage: 0,
             }
         },
         mounted(){
@@ -113,7 +130,17 @@
         methods:{
             getData(){
                 this.$api.get('file/list?moduleId=5&page='+this.pageIndex+'&size='+this.pageSize, null, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("查询数据失败")
+                        return;
+                    }
 
+                    this.pageData = [];
+                    let order =(this.pageIndex-1)*this.pageSize + 1;
+                    for(let i=0; i<res.list.length; i++){
+                        var fileUrl = baseUrl.localUrl + res.list[i].url;
+                        this.pageData.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, order: order, title: res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
+                    }
                 })
             },
             sizeChangeHandle(val) {
@@ -125,17 +152,41 @@
                 this.pageIndex = val
                 this.getData()
             },
-            viewDetail(id){
-
-            },
             deleteDt(id){
+                this.$api.get('means/delete', {fileId: id}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("操作失败");
+                        return;
+                    }
 
+                    this.$message("操作成功");
+                    this.getData();
+                    return;
+                })
             },
             publish(id){
+                this.$api.get('means/publish', {fileId: id}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("操作失败");
+                        return;
+                    }
 
+                    this.$message("操作成功");
+                    this.getData();
+                    return;
+                })
             },
             withdraw(id){
+                this.$api.get('means/cancle', {fileId: id}, res=>{
+                    if(res.code.toString() != "0"){
+                        this.$message("操作失败");
+                        return;
+                    }
 
+                    this.$message("操作成功");
+                    this.getData();
+                    return;
+                })
             },
             save(){
                 if(!this.title || this.title.length<1){
@@ -154,12 +205,14 @@
                     data.fileId = data.lianzhengFileId;
                 }
                 else{
-                    data = this.moduleEntity;
                     data.title = this.title;
                     data.fileId = this.fileList[0].lianzhengFileId;
                 }
 
+                console.log('开始保存数据')
                 this.$api.get('means/save', data, res=>{
+                    console.log('接口调用完成')
+                    console.log(res);
                     if(res.code.toString() != '0'){
                         this.$message('保存失败');
                         return false;
@@ -168,7 +221,8 @@
                     this.$message('保存成功');
                     this.clear();
                     this.dialogFormVisible = false;
-                    history.go(-1);
+
+                    this.getData();
                 });
 
 
@@ -176,7 +230,6 @@
             cancel(){
                 this.clear();
                 this.dialogFormVisible = false;
-                history.go(-1);
             },
             clear(){
                 this.moduleEntity = null;
@@ -201,11 +254,34 @@
                 param.append('file',data.file);
 
                 this.$api.post('means/upload',param, res=>{
+                    console.log(res);
                     let filedata = res.data;
+                    this.fileList = [];
                     this.fileList.push(filedata);
 
                     return false;
                 })
+            },
+            viewDetail(fileUrl){
+                this.dialogPdfVisible = true;
+
+                this.pdfUrl = pdf.createLoadingTask(fileUrl)
+            },
+            changePdfPage(val) {
+                // console.log(val)
+                if (val === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                    // console.log(this.currentPage)
+                }
+                if (val === 1 && this.currentPage < this.pdfPageCount) {
+                    this.currentPage++;
+                    // console.log(this.currentPage)
+                }
+            },
+
+            // pdf加载时
+            loadPdfHandler(e) {
+                this.currentPage = 1; // 加载的时候先加载第一页
             },
         }
     }
