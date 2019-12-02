@@ -174,7 +174,7 @@
                 pdfUrl: null,
                 dialogFormVisible: false,
                 currentPage: 0, // pdf文件页码
-                pdfPageCount: 0, // pdf文件总页数
+                pageCount: 0, // pdf文件总页数
                 fileUrls: [],
             }
         },
@@ -246,13 +246,26 @@
             },
             //资料模板
             getReferenceModule(){
-                this.lzReferenceModules = [
-                    {title:"资料模板1", isRead: true},
-                    {title:"资料模板2", isRead: false},
-                    {title:"资料模板3", isRead: true},
-                    {title:"资料模板4", isRead: false},
-                    {title:"资料模板5", isRead: true}
-                ]
+
+              this.$api.get('file/list?moduleId=5&page=1&size=6&status=1', null, res=>{
+                  if(res.code.toString() != "0"){
+                      this.$message("查询数据失败")
+                      return;
+                  }
+
+                  this.lzReferenceModules = [];
+                  for(let i=0; i<res.list.length; i++){
+                      var fileUrl = baseUrl.localUrl + res.list[i].url;
+                      this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
+                  }
+              })
+                // this.lzReferenceModules = [
+                //     {title:"资料模板1", isRead: true},
+                //     {title:"资料模板2", isRead: false},
+                //     {title:"资料模板3", isRead: true},
+                //     {title:"资料模板4", isRead: false},
+                //     {title:"资料模板5", isRead: true}
+                // ]
             },
             // 查看资料详情
             lookReference(reference){
@@ -313,6 +326,12 @@
             // pdf加载时
             loadPdfHandler(e) {
                 this.currentPage = 1; // 加载的时候先加载第一页
+            },
+
+            lookReference(item_f1) {
+              console.log(item_f1);
+              var url = item_f1.fileUrl;
+              window.location.href = url;
             },
         }
     }
