@@ -79,6 +79,7 @@
                 constNone: 'none',
                 returnBack: -1,
                 fileRes: [],
+                fileList: [],
                 fileHeaders:{
                     "Content-Type":"multipart/form-data"
                 },
@@ -131,6 +132,11 @@
                     this.selectedReftype=res.data.referenceType;
                     this.content = res.data.content;
                     this.refName = res.data.title;
+
+                    // 获取附件列表
+                    this.$api.get('file/list',{businessId: id, moduleId: 3, createdBy: null, page: 1, size: 100}, res=>{
+                        this.fileList = res.list;
+                    })
                 })
             },
             save(){
@@ -159,7 +165,7 @@
 
                 if(this.referenceEntity){
                     this.referenceEntity.project = this.selectedProject;
-                    this.referenceEntity.type = 0;
+                    this.referenceEntity.type = "3";
                     this.referenceEntity.referenceType = this.selectedReftype;
                     this.referenceEntity.title = this.refName;
                     this.referenceEntity.content = this.content;
@@ -170,7 +176,7 @@
                 else{
                     data = {
                         "title":this.refName,
-                        "type":0,
+                        "type":"3",
                         "referenceType": this.selectedReftype,
                         "departmentId":"",
                         "departmentName":"",
@@ -191,13 +197,23 @@
                     }
 
                     this.$message("保存成功")
+                    this.clear();
                     history.go(this.returnBack);
                 })
             },
             cancel(){
+                this.clear();
                 history.go(this.returnBack);
             },
-
+            clear(){
+                this.referenceEntity = null;
+                this.createdByName = null;
+                this.createdAt = null;
+                this.selectedProject = null;
+                this.selectedReftype=null;
+                this.content = null;
+                this.refName = null;
+            },
             //附件相关
             removeFile(file){
                 this.$api.get('file/delete',{id: this.fileMap[file.uid]}, res=>{

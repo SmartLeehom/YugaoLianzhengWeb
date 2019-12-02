@@ -24,7 +24,7 @@
 
     <div class="reference-department-list">
       <el-table :data="refData" class="table-wrap" style="width: 100%" max-height="460px">
-        <el-table-column prop="type" label="资料类型" width="200px">
+        <el-table-column prop="typeName" label="资料类型" width="200px">
         </el-table-column>
         <el-table-column prop="title" label="资料名称" width="220px">
         </el-table-column>
@@ -118,8 +118,18 @@
 
             queryRefList(){
                 //console.log(this.selectedProject + '--' + this.selectedReftype + '--' + this.keyPattern);
-                this.$api.get('reference/findList?type=1&page=1&referenceType='+this.selectedReftype+'&size=10&pattern='+this.keyPattern,null,res=> {
+                this.$api.get('reference/findList?type=3&page='+this.pageIndex+'&referenceType='+this.selectedReftype+'&size='+this.pageSize+'&pattern='+this.keyPattern,null,res=> {
                     this.refData = res.list;
+
+                    for(let i=0; i<this.refData.length; i++){
+                        if(this.refData[i].referenceType.toString() == "4"){
+                            this.refData[i].typeName = "廉政交底现场照片"
+                        }
+                        else if(this.refData[i].referenceType.toString() == "5"){
+                            this.refData[i].typeName = "廉政告知函"
+                        }
+                    }
+
                     this.pageIndex = res.pagebar.page;
                     this.totalSize = res.pagebar.size;
                     this.totalPage = res.pagebar.total;
@@ -132,9 +142,18 @@
                 })
             },
             getRefData(){
-              this.$api.get('reference/findList?type=0&page=1&size=10',null,res=>{
+              this.$api.get('reference/findList?type=3&page='+this.pageIndex+'&size='+this.pageSize,null,res=>{
               this.refData=res.list;
-              this.pageIndex=res.pagebar.page;
+                  for(let i=0; i<this.refData.length; i++){
+                      if(this.refData[i].referenceType.toString() == "4"){
+                          this.refData[i].typeName = "廉政交底现场照片"
+                      }
+                      else if(this.refData[i].referenceType.toString() == "5"){
+                          this.refData[i].typeName = "廉政告知函"
+                      }
+                  }
+
+                  this.pageIndex=res.pagebar.page;
               this.totalSize=res.pagebar.size;
               this.totalPage=res.pagebar.total;
               })
@@ -156,7 +175,9 @@
                 })
             },
             deleteRef(id){
-                console.log(id);
+                this.$api.post('reference/delete?id='+id,null,res=>{
+                    this.queryRefList();
+                })
             },
             sizeChangeHandle(val) {
                 this.pageSize = val

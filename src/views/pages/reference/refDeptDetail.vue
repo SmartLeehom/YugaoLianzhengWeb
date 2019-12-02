@@ -188,6 +188,7 @@
                     this.referenceEntity.referenceType = this.selectedReftype;
                     this.referenceEntity.title = this.refName;
                     this.referenceEntity.content = this.content;
+                    this.referenceEntity.type = "1";
 
                     data = this.referenceEntity;
                     data.fileIds = fileIds;
@@ -195,7 +196,7 @@
                 else{
                     data = {
                         "title":this.refName,
-                        "type": 1,
+                        "type": "1",
                         "referenceType": this.selectedReftype,
                         "departmentId":this.selectedDept,
                         "departmentName":this.selectedDeptName,
@@ -205,7 +206,7 @@
                         "createdById":this.createdByName,
                         "createdByName":this.createdByName,
                         "createdAt":this.createdAt,
-                        "fileIds": fileIds
+                        "fileIds": fileIds,
                     };
                 }
 
@@ -216,10 +217,12 @@
                     }
 
                     this.$message("保存成功")
+                    this.clear()
                     history.go(this.returnBack);
                 })
             },
             cancel(){
+                this.clear()
                 history.go(this.returnBack);
             },
 
@@ -249,6 +252,15 @@
 
                     return false;
                 })
+            },
+            clear(){
+                this.referenceEntity = null;
+                this.createdByName = null;
+                this.createdAt = null;
+                this.selectedDept = null;
+                this.selectedReftype=null;
+                this.content = null;
+                this.refName = null;
             },
         }
     }

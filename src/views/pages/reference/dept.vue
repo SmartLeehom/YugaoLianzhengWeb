@@ -126,11 +126,17 @@
 
             queryRefList(){
                 console.log(this.selectedDept + '--' + this.selectedReftype + '--' + this.keyPattern);
-                this.$api.get('reference/findList?type=0&page=1&referenceType='+this.selectedReftype+'&size=10&pattern='+this.keyPattern,null,res=>{
+                this.$api.get('reference/findList?type=1&page='+this.pageIndex+'&referenceType='+this.selectedReftype+'&size='+this.pageSize+'&pattern='+this.keyPattern,null,res=>{
                   this.refData=res.list;
                   for(let i=0; i<this.refData.length; i++){
-                      if(this.refData[i].type.toString() == "0"){
+                      if(this.refData[i].referenceType.toString() == "1"){
                           this.refData[i].typeName = "廉政专题教育会图文资料"
+                      }
+                      else if(this.refData[i].referenceType.toString() == "2"){
+                          this.refData[i].typeName = "廉政约谈图文资料"
+                      }
+                      else if(this.refData[i].referenceType.toString() == "3"){
+                          this.refData[i].typeName = "廉洁从业承诺书"
                       }
                   }
                   console.log(this.refData)
@@ -146,11 +152,17 @@
                 })
             },
             getRefData(){
-              this.$api.get('reference/findList?type=0&page=1&size=10',null,res=>{
+              this.$api.get('reference/findList?type=1&page='+this.pageIndex+'&size='+this.pageSize,null,res=>{
                 this.refData=res.list;
                   for(let i=0; i<this.refData.length; i++){
-                      if(this.refData[i].type.toString() == "0"){
+                      if(this.refData[i].referenceType.toString() == "1"){
                           this.refData[i].typeName = "廉政专题教育会图文资料"
+                      }
+                      else if(this.refData[i].referenceType.toString() == "2"){
+                          this.refData[i].typeName = "廉政约谈图文资料"
+                      }
+                      else if(this.refData[i].referenceType.toString() == "3"){
+                          this.refData[i].typeName = "廉洁从业承诺书"
                       }
                   }
                 this.pageIndex=res.pagebar.page;
@@ -175,8 +187,8 @@
                 })
             },
             deleteRef(id){
-                console.log(id);
                 this.$api.post('reference/delete?id='+id,null,res=>{
+                    this.queryRefList();
               })
             },
             sizeChangeHandle(val) {
