@@ -55,3 +55,8 @@
 .reference-department-list{
   margin-top: 21px;
 }
+.preview-pdf{
+  height: 800px;
+  max-height: 800px;
+  overflow: scroll;
+}

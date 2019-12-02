@@ -15,7 +15,8 @@ switch (env) {
             // localUrl: 'https://lujar.imdo.co/yugaoapi',
             // localUrl: 'http://qmr.natapp1.cc/yugaoapi/',
             // localUrl: 'https://lujar.imdo.co/yugaoapi/',
-            engineerUrl: 'http://222.180.168.215:9104/'
+            engineerUrl: 'http://222.180.168.215:9104/',
+            serverUrl: 'http://localhost:8080/lianzheng/api/'
         } // 这里是本地的请求url
         break
     case 'test': // 注意这里的名字要和步骤二中设置的环境名字对应起来
