@@ -170,6 +170,11 @@
                     return false;
                 }
 
+                if(!this.content){
+                    this.$message("请输入廉政资料的内容")
+                    return false;
+                }
+
                 // 保存
                 let data = null;
                 let fileIds = [];
