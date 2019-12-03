@@ -94,23 +94,23 @@
           <!--<span class="ringt-more" style="width: 74%">{{"更多>>"}}</span>-->
         </div>
 
-        <div class="right-panel-box" @click="gotoPage('missing')">
+        <div class="right-panel-box">
           <div class="top-analysis">
-            <div class="left-analysis">
+            <div class="left-analysis" @click="gotoPage('missing')">
               <span class="analysis-value">{{referenceMissingAmount}}</span><br/>
               <span class="analysis-title">廉政资料缺失项</span>
             </div>
-            <div class="right-analysis">
+            <div class="right-analysis" @click="gotoPage('management')">
               <span class="analysis-value">{{projectMissingAmount}}</span><br/>
-              <span class="analysis-title">项目缺失项</span>
+              <span class="analysis-title">项目预警项</span>
             </div>
           </div>
           <div class="bottom-analysis">
-            <div class="left-analysis" style="margin-top: 15px">
+            <div class="left-analysis" @click="gotoPage('missing')" style="margin-top: 15px">
               <span class="analysis-value">{{referencePer}}</span><br/>
               <span class="analysis-title">廉政资料完整度</span>
             </div>
-            <div class="right-analysis" style="margin-top: 15px">
+            <div class="right-analysis" @click="gotoPage('management')" style="margin-top: 15px">
               <span class="analysis-value">{{projectPer}}</span><br/>
               <span class="analysis-title">项目健康度</span>
             </div>

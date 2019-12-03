@@ -163,6 +163,8 @@
 </script>
 
 <style scoped>
+@import url("../../../assets/css/ref-dept.css");
+@import url("../../../assets/css/mgmt-central.css");
   .sub-title{
     font-weight: bold;
     color: #36373b;
