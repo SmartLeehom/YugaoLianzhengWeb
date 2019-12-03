@@ -287,7 +287,7 @@
     }
 </script>
 
-<style>
+<style scoped>
   @import url("../../../assets/css/ref-dept.css");
   @import url("../../../assets/css/mgmt-central.css");
 </style>

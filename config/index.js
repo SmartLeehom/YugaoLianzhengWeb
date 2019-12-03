@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/lianzheng/api/**': {
-        target: 'http://172.16.203.25:9090', // 你接口的域名
+        target: 'http://10.1.14.10:8091', // 你接口的域名
         secure: false,
         changeOrigin: false,
       }
@@ -46,6 +46,14 @@ module.exports = {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
+    proxyTable: {
+      '/lianzheng/api/**': {
+        target: 'http://10.1.14.10:8091', // 你接口的域名
+        secure: false,
+        changeOrigin: false,
+      }
+    },
+
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
@@ -70,6 +78,12 @@ module.exports = {
     // View the bundle analyzer report after build finishes:
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
-    bundleAnalyzerReport: process.env.npm_config_report
+    bundleAnalyzerReport: process.env.npm_config_report,
+    cssSourceMap: true,
+    autoOpenBrowser: false,
+    errorOverlay: true,
+    notifyOnErrors: true,
+    poll: false,
+    cacheBusting: true,
   }
 }

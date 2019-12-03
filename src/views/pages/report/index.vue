@@ -140,6 +140,6 @@
     }
 </script>
 
-<style>
+<style scoped>
   @import url("../../../assets/css/ref-dept.css");
 </style>

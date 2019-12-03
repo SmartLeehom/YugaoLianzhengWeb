@@ -91,13 +91,11 @@
     }
 </script>
 
-<style>
+<style scoped>
   @import url("../../assets/css/layout.css");
-
-
 </style>
 
-<style lang="less">
+<style lang="less" scoped>
   .name {
     border: none;
     cursor: pointer;

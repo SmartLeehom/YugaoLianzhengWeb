@@ -162,7 +162,7 @@
     }
 </script>
 
-<style>
+<style scoped>
   .sub-title{
     font-weight: bold;
     color: #36373b;
