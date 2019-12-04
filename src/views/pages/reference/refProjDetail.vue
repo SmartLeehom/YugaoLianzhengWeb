@@ -38,9 +38,10 @@
 
         <!--<textarea v-model="content" class="input-text full-widith"  style="max-height: 200px; min-height: 200px; resize: none"></textarea>-->
       </div>
-      <div style="margin-top: 15px;" v-if="isEdit">
+      <div style="margin-top: 15px;">
         <span class="query-title" style="vertical-align: top; float: left; margin-right: 10px">附件列表</span>
         <el-upload
+          :on-preview="download"
           :before-remove="removeFile"
           ref="fileUpload"
           :headers="fileHeaders"
@@ -48,6 +49,7 @@
           :with-credentials="true"
           action="#"
           :http-request="uploadFile"
+          :disabled="!isEdit"
           :file-list="fileList">
           <el-button size="small" >点击上传</el-button>
         </el-upload>
@@ -62,6 +64,7 @@
 </template>
 
 <script>
+    import baseUrl from "../../../utils/baseUrl";
     export default {
         name: "refDetail",
         data(){
@@ -216,7 +219,8 @@
             },
             //附件相关
             removeFile(file){
-                this.$api.get('file/delete',{id: this.fileMap[file.uid]}, res=>{
+                let id = this.fileMap[file.uid] ? this.fileMap[file.uid] : file.lianzhengFileId;
+                this.$api.get('file/delete',{id: id}, res=>{
                     if(res.code.toString() != "0"){
                         this.$message("删除失败")
                         return false;
@@ -240,6 +244,11 @@
                     return false;
                 })
             },
+            download(file){
+                let id = this.fileMap[file.uid] ? this.fileMap[file.uid] : file.lianzhengFileId;
+                var url = baseUrl.serverUrl+'/file/download?fileId='+id;
+                window.location.href = url;
+            }
         }
     }
 </script>

@@ -65,7 +65,7 @@
           </div>
 
           <div class="show-dongtai-info">
-            <div class="reference-box download-reference" v-for="(item_f1, index_f1) in lzReferenceModules" :key="index_f1" @click="lookReference(item_f1)">
+            <div class="reference-box download-reference" v-for="(item_f1, index_f1) in lzReferenceModules" :key="index_f1" @click="lookReferenceModule(item_f1)">
               <span class="readDot"></span>
               <h3 class="reference_title">
                 {{ item_f1.title }}
@@ -331,9 +331,28 @@
             },
 
             lookReference(item_f1) {
-              var url = item_f1.fileUrl;
-              window.location.href = url;
+                if(item_f1.type.toString() == "1"){
+                    // 进入集团部门资料详情查看页面
+                    this.iframeUrl = 'reference'
+                    this.$router.push({
+                        name: 'reference',
+                        params:{id: item_f1.lianzhengReferenceId, type: "1", title: item_f1.title, isEdit: false, returnBack:-2}
+                    })
+                }
+                else{
+                    // 进入工程资料详情查看页面
+                    this.iframeUrl = 'reference'
+                    this.$router.push({
+                        name: 'reference',
+                        params:{id: item_f1.lianzhengReferenceId, type: "3", title: item_f1.title, isEdit: false, returnBack:-2}
+                    })
+                }
             },
+
+            lookReferenceModule(item_f1){
+                var url = baseUrl.serverUrl+'/file/download?fileId='+item_f1.id;
+                window.location.href = url;
+            }
         }
     }
 </script>

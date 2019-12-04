@@ -4,24 +4,24 @@
       <el-row class="tac" style="margin-top: -25px">
         <el-col :span="4">
           <el-menu
-            default-active="dept"
+            :default-active="activeIndex"
             class="el-menu-vertical-demo"
             @select="handleSelect"
             text-color="#828386"
             active-text-color="#dd1519">
-            <el-menu-item index="dept" class="secNav selected">
+            <el-menu-item index="dept" :class="activeIndex=='dept'?'secNav selected':'secNav'">
               <span slot="title">集团与部门资料</span>
               <span style="float: right">{{">>"}}</span>
             </el-menu-item>
-            <el-menu-item index="project" class="secNav selected">
+            <el-menu-item index="project" :class="activeIndex=='project'?'secNav selected':'secNav'">
               <span slot="title">工程项目资料</span>
               <span style="float: right">{{">>"}}</span>
             </el-menu-item>
-            <el-menu-item index="missing" class="secNav selected">
+            <el-menu-item index="missing" :class="activeIndex=='missing'?'secNav selected':'secNav'">
               <span slot="title">资料缺失分析</span>
               <span style="float: right">{{">>"}}</span>
             </el-menu-item>
-            <el-menu-item index="refmodule" class="secNav selected">
+            <el-menu-item index="refmodule" :class="activeIndex=='refmodule'?'secNav selected':'secNav'">
               <span slot="title">资料模板下载</span>
               <span style="float: right">{{">>"}}</span>
             </el-menu-item>
@@ -55,11 +55,15 @@
         data(){
             return {
                 iframeUrl: 'dept',
+                activeIndex: 'dept',
             }
+        },
+        watch(){
         },
         mounted(){
             if(this.$route.params.route){
                 this.iframeUrl = this.$route.params.route
+                this.activeIndex = this.$route.params.route
                 this.$router.push({
                     name: this.$route.params.route
                 })
@@ -67,6 +71,7 @@
             else if(this.$route.params.id && this.$route.params.type){
                 if(["1","2"].indexOf(this.$route.params.type.toString()) >= 0){
                     this.iframeUrl = 'dept'
+                    this.activeIndex = 'dept'
                     this.$router.push({
                         name: 'refDeptDetail',
                         params:{id: this.$route.params.id, type: "集团与部门资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
@@ -74,6 +79,7 @@
                 }
                 else{
                     this.iframeUrl = 'project'
+                    this.activeIndex = 'project'
                     this.$router.push({
                         name: 'refProjDetail',
                         params:{id: this.$route.params.id, type: "工程项目资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
@@ -89,10 +95,11 @@
         methods:{
             handleSelect(key, keyPath) {
                 this.iframeUrl = '';
+                this.activeIndex = key;
                 this.$router.push({
                     name: `${key}`
                 })
-            }
+            },
         }
     }
 </script>

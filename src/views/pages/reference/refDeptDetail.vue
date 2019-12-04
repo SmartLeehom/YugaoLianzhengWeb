@@ -41,12 +41,14 @@
       <div style="margin-top: 15px;">
         <span class="query-title" style="vertical-align: top; float: left; margin-right: 10px">附件列表</span>
         <el-upload
+          :on-preview="download"
           :before-remove="removeFile"
           ref="fileUpload"
           :headers="fileHeaders"
           class="upload-demo"
           :with-credentials="true"
           action="#"
+          :disabled="!isEdit"
           :http-request="uploadFile"
           :file-list="fileList">
           <el-button size="small" v-if="isEdit">点击上传</el-button>
@@ -62,6 +64,7 @@
 </template>
 
 <script>
+    import baseUrl from "../../../utils/baseUrl";
     export default {
         name: "refDetail",
         data(){
@@ -264,6 +267,11 @@
                 this.content = null;
                 this.refName = null;
             },
+            download(file){
+                let id = this.fileMap[file.uid] ? this.fileMap[file.uid] : file.lianzhengFileId;
+                var url = baseUrl.serverUrl+'/file/download?fileId='+id;
+                window.location.href = url;
+            }
         }
     }
 </script>

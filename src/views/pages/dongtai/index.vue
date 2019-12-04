@@ -1,17 +1,21 @@
 <template>
   <div>
     <div class="reference-department-header">
-      <span class="reference-department-title">廉政动态</span>
+      <span class="reference-department-title">{{"首页 > 廉政动态"}}</span>
     </div>
     <div class="reference-module-table">
-      <el-dialog :visible.sync="dialogFormVisible" :append-to-body="true" class="preview-pdf">
-        <p class="arrow" style="text-align: center">
-          <!-- // 上一页 -->
-          <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
-          <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
-          <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
-        </p>
-        <pdf ref="pdf" :src="pdfUrl" style="width: 100%; height: 800px; overflow: scroll" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+      <el-dialog :visible.sync="dialogFormVisible" :append-to-body="true" :fullscreen="true" style="height: 100%">
+        <div style="position: fixed; top: 60px; z-index:999; _position:absolute; _bottom:auto; width: 100%;">
+          <p class="arrow" style=" text-align: center; width: 100%">
+            <!-- // 上一页 -->
+            <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}" style="color: #ed0909;cursor: pointer; font-weight: bold">{{"<< &nbsp;&nbsp;"}}</span>
+            <span style="color: #828386; font-weight: bold">{{currentPage}} / {{pdfPageCount}}</span>
+            <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pdfPageCount}" style="color: #ed0909;cursor: pointer;  font-weight: bold">{{"&nbsp;&nbsp;&nbsp;>>"}}</span>
+          </p>
+        </div>
+        <div>
+          <pdf ref="pdf" :src="pdfUrl" style="width: 100%;" :page="currentPage" @num-pages="pdfPageCount=$event" @page-loaded="currentPage=$event" @loaded="loadPdfHandler"></pdf>
+        </div>
       </el-dialog>
 
 

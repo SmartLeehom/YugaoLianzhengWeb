@@ -30,6 +30,11 @@
   width: 600px;
 }
 
+.mgmt-central-user-detail{
+  height: 800px;
+  width: 50%;
+}
+
 .small-dialog-value{
   width: 81%;
 }

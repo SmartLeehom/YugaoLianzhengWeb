@@ -75,6 +75,10 @@
         components: {
         },
         watch: {
+            $route(to)
+            {
+                this.listenRoute(to.name)
+            }
         },
         mounted() {
         },
@@ -86,7 +90,15 @@
                 this.$router.push({
                     name: `${key}`
                 })
-            }
+            },
+            listenRoute(name) {
+                if(['reference','refDeptDetail','refProjDetail','dept','project','missing','refmodule'].indexOf(name) >= 0){
+                    this.activeIndex = "reference";
+                }
+                else if(['management'].indexOf(name) >= 0){
+                    this.activeIndex = "management";
+                }
+            },
         }
     }
 </script>

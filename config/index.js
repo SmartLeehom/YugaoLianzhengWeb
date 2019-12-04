@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/lianzheng/api/**': {
-        target: 'http://10.1.14.10:8091', // 你接口的域名
+        //target: 'http://10.1.14.10:8091', // 你接口的域名
+        target: 'http://172.16.203.25:9090',
         secure: false,
         changeOrigin: false,
       }
@@ -48,7 +49,8 @@ module.exports = {
 
     proxyTable: {
       '/lianzheng/api/**': {
-        target: 'http://10.1.14.10:8091', // 你接口的域名
+        target: 'http://172.16.203.25:9090',
+        //target: 'http://10.1.14.10:8091', // 你接口的域名
         secure: false,
         changeOrigin: false,
       }

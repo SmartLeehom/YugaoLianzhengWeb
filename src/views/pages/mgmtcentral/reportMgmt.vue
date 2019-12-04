@@ -79,6 +79,7 @@
 
           <el-upload
             :before-remove="removeFile"
+            :on-preview="downloadFile"
             ref="fileUpload"
             :headers="fileHeaders"
             accept=".pdf"
@@ -103,6 +104,7 @@
 </template>
 
 <script>
+    import baseUrl from "../../../utils/baseUrl";
     export default {
         name: "reportMgmt",
         data(){
@@ -289,8 +291,23 @@
                 this.reportTitle=null;
                 this.periodStart=null;
                 this.periodEnd=null;
-                this.fileRes = [];
+                this.fileRes = null;
+                this.fileList = [];
             },
+
+            // 下载附件
+            downloadFile(file){
+                //下载附件
+                if(this.fileRes.lianzhengFileId){
+                    var url = baseUrl.serverUrl+'/file/download?fileId='+this.fileRes.lianzhengFileId;
+                    window.location.href = url;
+                }
+                else{
+
+                    var url = baseUrl.serverUrl+'/file/download?businessId='+this.fileRes.businessId+'&moduleId=3';
+                    window.location.href = url;
+                }
+            }
         }
     }
 </script>
