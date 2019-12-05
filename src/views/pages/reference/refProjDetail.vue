@@ -160,6 +160,8 @@
                 }
 
                 // 保存
+                let isNewAdded = true;
+
                 let data = null;
                 let fileIds = [];
                 for(var i=0; i<this.fileRes.length; i++){
@@ -175,6 +177,7 @@
 
                     data = this.referenceEntity;
                     data.fileIds = fileIds;
+                    isNewAdded = false;
                 }
                 else{
                     data = {
@@ -199,9 +202,48 @@
                         return false;
                     }
 
-                    this.$message("保存成功")
-                    this.clear();
-                    history.go(this.returnBack);
+                    // 如果是新增的数据，还需要新增待办事项给 固定人员+项目负责人
+                    if(isNewAdded){
+                        let userIds = utils.SupervisionIds;
+
+                        // 获取项目负责人
+                        // 。。待完成
+
+                        // 推送接口
+                        let undoData = [];
+                        for(let u=0; u<userIds.length; u++){
+                            undoData.push({
+                                lianzhengReferenceId: res.data.lianzhengReferenceId,
+                                type: 1,
+                                dueBy: userIds[u],
+                                finishedBy: '',
+                                dueAt: null,
+                                finishedAt: null,
+                                createdBy: sessionStorage.getItem('userId'),
+                                createdAt: new Date(),
+                                updatedBy: sessionStorage.getItem('userId'),
+                                updatedAt:  new Date(),
+                                status: 0,
+                                remarks: '',
+                            });
+                        }
+                        this.$api.post('undo/addList', undoData, res=>{
+                            if(res.code.toString() != "0"){
+                                this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
+                                this.clear()
+                                history.go(this.returnBack);
+                            }
+
+                            this.$message("保存成功")
+                            this.clear()
+                            history.go(this.returnBack);
+                        })
+                    }
+                    else{
+                        this.$message("保存成功")
+                        this.clear();
+                        history.go(this.returnBack);
+                    }
                 })
             },
             cancel(){

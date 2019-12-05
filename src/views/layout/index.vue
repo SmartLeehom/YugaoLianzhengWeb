@@ -91,7 +91,6 @@
                         return
                     }
                     let user = res.user;
-                    console.log(user)
                     sessionStorage.setItem('userId', user.userId)
                     sessionStorage.setItem('userName', user.userName)
                     sessionStorage.setItem('mobile', user.mobile)

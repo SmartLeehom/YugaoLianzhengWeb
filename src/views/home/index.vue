@@ -278,7 +278,7 @@
 
             // 待办、待阅事项
             getWait2Do(){
-                this.$api.get('undo/findList?page=1&size=4',null,res=>{
+                this.$api.get('undo/findList?page=1&size=4&status=0&dueBy='+sessionStorage.getItem('userId'),null,res=>{
                 this.lzWait2Do=res.list
               })
                 // this.lzWait2Do = [
