@@ -71,7 +71,7 @@
           <el-date-picker
             v-model="periodEnd"
             type="datetime"
-            placeholder="开始日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"
+            placeholder="结束日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"
           ></el-date-picker>
         </div>
         <div class="dialog-row">

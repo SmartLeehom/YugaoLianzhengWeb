@@ -6,7 +6,7 @@
 
     <div class="reference-department-query">
       <span class="query-title">所属部门</span>
-      <el-select v-model="selectedDept" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择" :disabled="!isEdit">
+      <el-select v-model="selectedDept" filterable style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择或输入搜索" :disabled="!isEdit">
         <el-option v-for="item in depts" :key="item.fid" :label="item.fname" :value="item.fid"> </el-option>
       </el-select>
 

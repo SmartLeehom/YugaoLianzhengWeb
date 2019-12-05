@@ -21,7 +21,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
@@ -49,8 +49,9 @@ module.exports = {
 
     proxyTable: {
       '/lianzheng/api/**': {
-        target: 'http://172.16.203.25:9090',
+        //target: 'http://172.16.203.25:9090',
         //target: 'http://10.1.14.10:8091', // 你接口的域名
+        target: 'http://222.180.168.215:18091',
         secure: false,
         changeOrigin: false,
       }

@@ -9,12 +9,12 @@
       </div>
 
       <span class="query-title">项目名称</span>
-      <el-select v-model="selectedProject" style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择" >
+      <el-select v-model="selectedProject" style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索" filterable >
         <el-option v-for="item in projects" :key="item.key" :label="item.value" :value="item.key"> </el-option>
       </el-select>
 
       <span class="query-title">部门名称</span>
-      <el-select v-model="selectedDept" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择" >
+      <el-select v-model="selectedDept" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择或输入搜索" filterable >
         <el-option v-for="item in depts" :key="item.key" :label="item.value" :value="item.key"> </el-option>
       </el-select>
 

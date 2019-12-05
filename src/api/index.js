@@ -41,6 +41,7 @@ function apiAxios (method, url, params, success, failure) {
     url: url,
     data: method === 'POST' || method === 'PUT' ? params : null,
     params: method === 'GET' || method === 'DELETE' ? params : null,
+    headers: {'token': sessionStorage.getItem('lzToken')},
     baseURL: root,
     withCredentials: false
   })

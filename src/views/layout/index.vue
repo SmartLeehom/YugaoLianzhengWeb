@@ -81,6 +81,30 @@
             }
         },
         mounted() {
+            let token = this.getUrlKey('code')
+
+            if(token){
+                sessionStorage.setItem('lzToken', token)
+                this.$api.get('sso/userinfo?token='+token, null, res=> {
+                    if (res.code != "0") {
+                        this.$message("获取用户信息失败")
+                        return
+                    }
+                    let user = res.user;
+                    console.log(user)
+                    sessionStorage.setItem('userId', user.userId)
+                    sessionStorage.setItem('userName', user.userName)
+                    sessionStorage.setItem('mobile', user.mobile)
+
+                    this.userName = user.userName
+                    location.href = location.href.split('?')[0]
+
+                })
+            }
+            else{
+                this.userName = sessionStorage.getItem('userName')
+                location.href = location.href.split('?')[0]
+            }
         },
         methods: {
             handleSelect(key, keyPath) {
@@ -99,6 +123,9 @@
                     this.activeIndex = "management";
                 }
             },
+            getUrlKey: function (name) {
+                return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
+            }
         }
     }
 </script>

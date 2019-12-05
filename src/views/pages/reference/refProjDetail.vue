@@ -6,7 +6,7 @@
 
     <div class="reference-department-query">
       <span class="query-title">所属项目</span>
-      <el-select v-model="selectedProject" style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择" :disabled="!isEdit">
+      <el-select v-model="selectedProject" style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索" filterable :disabled="!isEdit">
         <el-option v-for="item in projects" :key="item.key" :label="item.value" :value="item.key"> </el-option>
       </el-select>
 
