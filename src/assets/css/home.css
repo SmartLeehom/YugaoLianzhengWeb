@@ -164,6 +164,8 @@
   font-weight: normal;
   font-family: "Microsoft YaHei";
   color: #828386;
+  width: 100%;
+  overflow: hidden;
 }
 
 .waiting2DoReadDot{

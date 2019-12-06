@@ -91,6 +91,8 @@
         },
         methods: {
             getProjects(){
+
+
                 this.projects=[
                     {key: 1, value: "项目1"},
                     {key: 2, value: "项目2"},

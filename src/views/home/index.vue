@@ -241,8 +241,13 @@
             //廉政资料
             getReferences(){
               this.$api.get('reference/findList?page=1&size=5',null,res=>{
-              this.lzReferences=res.list
-            })
+                  this.lzReferences=res.list
+                  for(let j = 0; j < this.lzReferences.length; j++){
+                      if(this.lzReferences[j].title.length > 19){
+                          this.lzReferences[j].title = this.lzReferences[j].title.substr(0,19)+'...'
+                      }
+                  }
+              })
                 // this.lzReferences = [
                 //     {title:"廉政资料1", isRead: true},
                 //     {title:"廉政资料2", isRead: false},
@@ -264,7 +269,7 @@
                   for(let i=0; i<res.list.length; i++){
                       var fileUrl = baseUrl.serverUrl+'/file/download?businessId='+ res.list[i].lianzhengFileId+'&moduleId=5';
 
-                      this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
+                      this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks.length > 19 ? res.list[i].remarks.substr(0,19)+'...' : res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
                   }
               })
                 // this.lzReferenceModules = [
@@ -279,8 +284,15 @@
             // 待办、待阅事项
             getWait2Do(){
                 this.$api.get('undo/findList?page=1&size=4&status=0&dueBy='+sessionStorage.getItem('userId'),null,res=>{
-                this.lzWait2Do=res.list
-              })
+                    this.lzWait2Do = res.list;
+
+                    for(let j = 0; j < this.lzWait2Do.length; j++){
+                        if(this.lzWait2Do[j].remarks.length > 21){
+                            this.lzWait2Do[j].remarks = this.lzWait2Do[j].remarks.substr(0,21)+'...'
+                        }
+                    }
+
+                })
                 // this.lzWait2Do = [
                 //     {title:"待办事项1", isRead: true},
                 //     {title:"待阅事项1", isRead: false},

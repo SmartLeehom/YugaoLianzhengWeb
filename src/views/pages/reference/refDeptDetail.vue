@@ -90,7 +90,7 @@
                     "Content-Type":"multipart/form-data"
                 },
                 fileMap:{},
-                referenceEntity:{}
+                referenceEntity:null
             }
         },
         mounted(){
@@ -226,14 +226,17 @@
                     }
 
                     // 如果是新增的数据，还需要新增待办事项给 固定人员+部门负责人
+                    console.log('--------------------------------------')
+                    console.log(isNewAdded)
                     if(isNewAdded){
                         let userIds = utils.SupervisionIds;
-
+                        console.log(userIds);
                         // 获取部门负责人
                         // 。。待完成
 
                         // 推送接口
                         let undoData = [];
+                        let title = sessionStorage.getItem('userName') + '上传了' + this.selectedDeptName + '-' + this.refTypes.find(item=>item.lianzhengReferenceFileTypeId.toString()==this.selectedReftype.toString()).name;
                         for(let u=0; u<userIds.length; u++){
                             undoData.push({
                                 lianzhengReferenceId: res.data.lianzhengReferenceId,
@@ -247,7 +250,7 @@
                                 updatedBy: sessionStorage.getItem('userId'),
                                 updatedAt:  new Date(),
                                 status: 0,
-                                remarks: '',
+                                remarks: title,
                             });
                         }
                         this.$api.post('undo/addList', undoData, res=>{
