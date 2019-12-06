@@ -100,11 +100,17 @@
         },
         methods:{
             getDepts(){
-                this.projects=[
-                    {key: 1, value: "项目1"},
-                    {key: 2, value: "项目2"},
-                    {key: 3, value: "项目3"},
-                ]
+                this.$api.get('project/list',null, res=>{
+                    if(res.code.toString() != '0'){
+                        this.$message('项目数据查询失败')
+                        return;
+                    }
+
+                    this.projects=[];
+                    for(let i=0; i<res.data.length; i++){
+                        this.projects.push({key: res.data[i].sysProjectId, value: res.data[i].name})
+                    }
+                })
             },
             getRefTypes(){
                 this.refTypes = [
@@ -160,6 +166,7 @@
                 }
 
                 // 保存
+                let projectDetail = this.projects.find(item=>item.sysProjectId.toString() == this.selectedProject.toString());
                 let isNewAdded = true;
 
                 let data = null;
@@ -187,7 +194,7 @@
                         "departmentId":"",
                         "departmentName":"",
                         "project":this.selectedProject,
-                        "projectName":"",
+                        "projectName":projectDetail.name,
                         "content":this.content,
                         "createdById":this.createdByName,
                         "createdByName":this.createdByName,
@@ -208,35 +215,40 @@
 
                         // 获取项目负责人
                         // 。。待完成
-
-                        // 推送接口
-                        let undoData = [];
-                        for(let u=0; u<userIds.length; u++){
-                            undoData.push({
-                                lianzhengReferenceId: res.data.lianzhengReferenceId,
-                                type: 1,
-                                dueBy: userIds[u],
-                                finishedBy: '',
-                                dueAt: null,
-                                finishedAt: null,
-                                createdBy: sessionStorage.getItem('userId'),
-                                createdAt: new Date(),
-                                updatedBy: sessionStorage.getItem('userId'),
-                                updatedAt:  new Date(),
-                                status: 0,
-                                remarks: '',
-                            });
-                        }
-                        this.$api.post('undo/addList', undoData, res=>{
-                            if(res.code.toString() != "0"){
-                                this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
-                                this.clear()
-                                history.go(this.returnBack);
+                        this.$api.get('user/userinfo?username='+projectDetail.responserName,null, user=>{
+                            if(user.code.toString() == '0' && user.data && user.data.userId){
+                                userIds.push(user.data.userId);
                             }
 
-                            this.$message("保存成功")
-                            this.clear()
-                            history.go(this.returnBack);
+                            // 推送接口
+                            let undoData = [];
+                            for(let u=0; u<userIds.length; u++){
+                                undoData.push({
+                                    lianzhengReferenceId: res.data.lianzhengReferenceId,
+                                    type: 1,
+                                    dueBy: userIds[u],
+                                    finishedBy: '',
+                                    dueAt: null,
+                                    finishedAt: null,
+                                    createdBy: sessionStorage.getItem('userId'),
+                                    createdAt: new Date(),
+                                    updatedBy: sessionStorage.getItem('userId'),
+                                    updatedAt:  new Date(),
+                                    status: 0,
+                                    remarks: '',
+                                });
+                            }
+                            this.$api.post('undo/addList', undoData, res=>{
+                                if(res.code.toString() != "0"){
+                                    this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
+                                    this.clear()
+                                    history.go(this.returnBack);
+                                }
+
+                                this.$message("保存成功")
+                                this.clear()
+                                history.go(this.returnBack);
+                            })
                         })
                     }
                     else{

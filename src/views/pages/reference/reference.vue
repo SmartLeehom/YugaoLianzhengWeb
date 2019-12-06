@@ -74,7 +74,7 @@
                     this.activeIndex = 'dept'
                     this.$router.push({
                         name: 'refDeptDetail',
-                        params:{id: this.$route.params.id, type: "集团与部门资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
+                        params:{id: this.$route.params.id, type: "集团与部门资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack: this.$route.params.returnBack || -2}
                     })
                 }
                 else{
@@ -82,7 +82,7 @@
                     this.activeIndex = 'project'
                     this.$router.push({
                         name: 'refProjDetail',
-                        params:{id: this.$route.params.id, type: "工程项目资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:-2}
+                        params:{id: this.$route.params.id, type: "工程项目资料", title: this.$route.params.title, isEdit: this.$route.params.isEdit, returnBack:this.$route.params.returnBack||-2}
                     })
                 }
             }

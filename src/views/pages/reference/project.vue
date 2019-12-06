@@ -98,8 +98,8 @@
                     }
 
                     this.projects=[];
-                    for(let i=0; i<res.list.length; i++){
-                        this.projects.push({key: res.list[i].sysProjectId, value: res.list[i].name})
+                    for(let i=0; i<res.data.length; i++){
+                        this.projects.push({key: res.data[i].sysProjectId, value: res.data[i].name})
                     }
                 })
             },

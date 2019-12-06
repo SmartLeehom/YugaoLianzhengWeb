@@ -233,36 +233,50 @@
                         console.log(userIds);
                         // 获取部门负责人
                         // 。。待完成
-
-                        // 推送接口
-                        let undoData = [];
-                        let title = sessionStorage.getItem('userName') + '上传了' + this.selectedDeptName + '-' + this.refTypes.find(item=>item.lianzhengReferenceFileTypeId.toString()==this.selectedReftype.toString()).name;
-                        for(let u=0; u<userIds.length; u++){
-                            undoData.push({
-                                lianzhengReferenceId: res.data.lianzhengReferenceId,
-                                type: 1,
-                                dueBy: userIds[u],
-                                finishedBy: '',
-                                dueAt: null,
-                                finishedAt: null,
-                                createdBy: sessionStorage.getItem('userId'),
-                                createdAt: new Date(),
-                                updatedBy: sessionStorage.getItem('userId'),
-                                updatedAt:  new Date(),
-                                status: 0,
-                                remarks: title,
-                            });
-                        }
-                        this.$api.post('undo/addList', undoData, res=>{
-                            if(res.code.toString() != "0"){
-                                this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
-                                this.clear()
-                                history.go(this.returnBack);
+                        this.$api.get('user/queryUserList?deptId='+this.selectedDept+'&roleId=3',null, users=>{
+                            if(users.code.toString() == '0' && users.list && users.list.length>0){
+                                for(let u=0;u<users.list.length;u++){
+                                    userIds.push(parseInt(users.list[u].userId));
+                                }
                             }
 
-                            this.$message("保存成功")
-                            this.clear()
-                            history.go(this.returnBack);
+                            console.log('-----------------------------------111111')
+
+
+                            // 推送接口
+                            let undoData = [];
+                            let title = sessionStorage.getItem('userName') + '上传了' + this.selectedDeptName + '-' + this.refTypes.find(item=>item.lianzhengReferenceFileTypeId.toString()==this.selectedReftype.toString()).name;
+                            for(let u=0; u<userIds.length; u++){
+                                undoData.push({
+                                    lianzhengReferenceId: res.data.lianzhengReferenceId,
+                                    type: 1,
+                                    dueBy: userIds[u],
+                                    finishedBy: '',
+                                    dueAt: null,
+                                    finishedAt: null,
+                                    createdBy: sessionStorage.getItem('userId'),
+                                    createdAt: new Date(),
+                                    updatedBy: sessionStorage.getItem('userId'),
+                                    updatedAt:  new Date(),
+                                    status: 0,
+                                    remarks: title,
+                                });
+                            }
+                            console.log('-----------------------------------222222')
+
+                            this.$api.post('undo/addList', undoData, res=>{
+                                if(res.code.toString() != "0"){
+                                    this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
+                                    this.clear()
+                                    history.go(-1);
+                                    console.log('-----------------------------------err')
+                                }
+
+                                console.log('-----------------------------------3333333')
+                                this.$message("保存成功")
+                                this.clear()
+                                history.go(-1);
+                            })
                         })
                     }
                     else{

@@ -142,6 +142,22 @@ export default new Router({
                 },
                 component: resolve => require(['./views/pages/dongtai/index.vue'], resolve),
               },
+              {
+                path: '/undoList',
+                name: 'undoList',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/pages/undoList/index.vue'], resolve),
+              },
+              {
+                path: '/undoDetail',
+                name: 'undoDetail',
+                meta: {
+                  requireAuth: true
+                },
+                component: resolve => require(['./views/pages/undoList/undoDetail.vue'], resolve),
+              },
             ]
         },
         /*{

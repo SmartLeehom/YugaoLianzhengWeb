@@ -155,6 +155,10 @@
                             userRole: roleNames.substr(0, roleNames.length - 1),
                         })
                     }
+
+                    this.pageIndex=res.pagebar.page;
+                    this.pageSize=res.pagebar.size;
+                    this.totalPage=res.pagebar.total;
                 });
             },
             sizeChangeHandle(val) {

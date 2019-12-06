@@ -81,13 +81,13 @@
       <div class="waiting-box">
         <div class="dongtai">
           <span class="title">待办&消息</span>
-          <span class="ringt-more">{{"更多>>"}}</span>
+          <span class="ringt-more"  @click="gotoPage('undoList')">{{"更多>>"}}</span>
         </div>
 
         <div class="right-panel-box">
           <div class="reference-box" v-for="(item_f1, index_f1) in lzWait2Do" :key="index_f1" @click="">
             <span class="waiting2DoReadDot"></span>
-            <h3 class="reference_title reference-waiting-do-title">
+            <h3 class="reference_title reference-waiting-do-title"  @click="gotoPage('undoDetail', item_f1.lianzhengUndoId)">
               {{ item_f1.remarks }}
             </h3>
           </div>
@@ -305,7 +305,7 @@
 
             },
 
-            gotoPage(name){
+            gotoPage(name, Id=-1){
                 if(name == 'refmodule'){
                     this.$router.push({
                         name: `${name}`,
@@ -316,6 +316,12 @@
                     this.$router.push({
                         name: "reference",
                         params: {route: 'missing'}
+                    })
+                }
+                else if(name == 'undoDetail'){
+                    this.$router.push({
+                        name: name,
+                        params: {id: Id}
                     })
                 }
                 else{
