@@ -91,13 +91,17 @@
         },
         methods: {
             getProjects(){
+                this.$api.get('project/list',null, res=>{
+                    if(res.code.toString() != '0'){
+                        this.$message('项目数据查询失败')
+                        return;
+                    }
 
-
-                this.projects=[
-                    {key: 1, value: "项目1"},
-                    {key: 2, value: "项目2"},
-                    {key: 3, value: "项目3"},
-                ]
+                    this.projects=[];
+                    for(let i=0; i<res.list.length; i++){
+                        this.projects.push({key: res.list[i].sysProjectId, value: res.list[i].name})
+                    }
+                })
             },
             getRefTypes(){
                 this.$api.get('referenceFileType/findList?referenceTypeId=3',null, res=>{
