@@ -269,7 +269,7 @@
                   for(let i=0; i<res.list.length; i++){
                       var fileUrl = baseUrl.serverUrl+'/file/download?businessId='+ res.list[i].lianzhengFileId+'&moduleId=5';
 
-                      this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks.length > 19 ? res.list[i].remarks.substr(0,19)+'...' : res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
+                      this.lzReferenceModules.push({fileUrl: fileUrl, id: res.list[i].lianzhengFileId, title: res.list[i].remarks.length > 16 ? res.list[i].remarks.substr(0,16)+'...' : res.list[i].remarks, statusDesc: res.list[i].status.toString() == 1 ? "已发布" : "未发布", status: res.list[i].status, createdAt: res.list[i].createdAt.split(' ')[0]})
                   }
               })
                 // this.lzReferenceModules = [
@@ -284,7 +284,7 @@
             // 待办、待阅事项
             getWait2Do(){
                 this.$api.get('undo/findList?page=1&size=4&status=0&dueBy='+sessionStorage.getItem('userId'),null,res=>{
-                    this.lzWait2Do = res.list;
+                    this.lzWait2Do = res.list.filter(item=>item.remarks.length >= 1);
 
                     for(let j = 0; j < this.lzWait2Do.length; j++){
                         if(this.lzWait2Do[j].remarks.length > 21){

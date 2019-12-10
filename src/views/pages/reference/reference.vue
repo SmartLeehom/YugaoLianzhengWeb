@@ -94,7 +94,7 @@
         },
         methods:{
             handleSelect(key, keyPath) {
-                this.iframeUrl = '';
+                this.iframeUrl = key;
                 this.activeIndex = key;
                 this.$router.push({
                     name: `${key}`

@@ -7,8 +7,8 @@ var env = process.env.NODE_ENV === 'development' ? 'development'
 switch (env) {
     case 'development':
         baseUrl = {
-          localUrl: 'http://localhost:8080/',
-          fileUrl: 'http://localhost:8080/lianzheng/api/file/preview?',
+          localUrl: 'http://localhost:8081/',
+          fileUrl: 'http://localhost:8081/lianzheng/api/file/preview?',
           //localUrl: 'http://222.180.168.215:8081/yugaoapi/',
             // localUrl: 'http://zxsj.zdwa.com/yugaoapi/',
             // localUrl: 'http://topiano.mynatapp.cc/yugaoapi/',
@@ -16,7 +16,7 @@ switch (env) {
             // localUrl: 'http://qmr.natapp1.cc/yugaoapi/',
             // localUrl: 'https://lujar.imdo.co/yugaoapi/',
             engineerUrl: 'http://222.180.168.215:9104/',
-            serverUrl: 'http://localhost:8080/lianzheng/api/'
+            serverUrl: 'http://localhost:8081/lianzheng/api/'
         } // 这里是本地的请求url
       /*baseUrl = {
         localUrl: 'http://222.180.168.215:18090/',

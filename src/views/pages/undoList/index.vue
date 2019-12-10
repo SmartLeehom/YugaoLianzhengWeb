@@ -9,18 +9,18 @@
       <el-date-picker
         v-model="startDate"
         type="datetime"
-        placeholder="开始日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px; margin-right: 15px"
+        placeholder="开始日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="margin-right: 15px"
       ></el-date-picker>
 
       <span class="query-title">结束日期</span>
       <el-date-picker
         v-model="endDate"
         type="datetime"
-        placeholder="开始日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px; margin-right: 15px"
+        placeholder="开始日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="margin-right: 15px"
       ></el-date-picker>
 
-      <span class="query-title">消息类型</span>
-      <el-select v-model="msgTypes.key" style="width:180px; margin-right: 15px" @change="msgtypeChanges" clearable placeholder="请选择">
+      <span class="query-title" v-if="false">消息类型</span>
+      <el-select v-model="msgTypes.key" v-if="false" style="width:180px; margin-right: 15px" @change="msgtypeChanges" clearable placeholder="请选择">
         <el-option v-for="item in msgTypes" :key="item.id" :label="item.name" :value="item.id"> </el-option>
       </el-select>
 
@@ -29,7 +29,7 @@
         <el-option v-for="item in msgStatus" :key="item.id" :label="item.name" :value="item.id"> </el-option>
       </el-select>
 
-      <el-button type="danger" class="submit-btn" style="margin-left: 10px" @click="getData()">查询</el-button>
+      <el-button type="danger" class="submit-btn" style="margin-left: 150px" @click="getData()">查询</el-button>
     </div>
 
     <div class="reference-module-table" style="margin-top: 21px">

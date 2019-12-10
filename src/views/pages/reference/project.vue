@@ -6,12 +6,12 @@
 
     <div class="reference-department-query">
       <span class="query-title">项目</span>
-      <el-select v-model="projects.key" filterable style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索">
+      <el-select v-model="projects.key" clearable filterable style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索">
         <el-option v-for="item in projects" :key="item.key" :label="item.value" :value="item.key"> </el-option>
       </el-select>
 
       <span class="query-title">资料类型</span>
-      <el-select v-model="refTypes.key" style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
+      <el-select v-model="refTypes.key" clearable style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
         <el-option v-for="item in refTypes" :key="item.lianzhengReferenceTypeId" :label="item.name" :value="item.lianzhengReferenceTypeId"> </el-option>
       </el-select>
 
@@ -123,8 +123,19 @@
             },
 
             queryRefList(){
+                let apiUrl = 'reference/findList?type=3&page='+this.pageIndex+'&size='+this.pageSize;
+                if(this.selectedReftype){
+                    apiUrl += '&referenceType='+this.selectedReftype;
+                }
+                if(this.keyPattern){
+                    apiUrl += '&pattern='+this.keyPattern;
+                }
+                if(this.selectedProject){
+                    apiUrl += '&project='+this.selectedProject;
+                }
+
                 //console.log(this.selectedProject + '--' + this.selectedReftype + '--' + this.keyPattern);
-                this.$api.get('reference/findList?type=3&page='+this.pageIndex+'&referenceType='+this.selectedReftype+'&size='+this.pageSize+'&pattern='+this.keyPattern,null,res=> {
+                this.$api.get(apiUrl,null,res=> {
                     this.refData = res.list;
 
                     for(let i=0; i<this.refData.length; i++){
@@ -137,7 +148,7 @@
                     }
 
                     this.pageIndex = res.pagebar.page;
-                    this.totalSize = res.pagebar.size;
+                    this.pageSize = res.pagebar.size;
                     this.totalPage = res.pagebar.total;
                 })
             },
@@ -160,7 +171,7 @@
                   }
 
                   this.pageIndex=res.pagebar.page;
-              this.totalSize=res.pagebar.size;
+              this.pageSize=res.pagebar.size;
               this.totalPage=res.pagebar.total;
               })
                 // this.refData=[

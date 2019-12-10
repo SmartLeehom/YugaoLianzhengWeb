@@ -79,19 +79,22 @@
 
 .main-img-panel .dongtai-title-div{
   background-color:#36373b;
-  opacity: 0.5;
+  opacity: 0.7;
   width: 99%;
   padding-left: 1%;
+  height: 50px;
   position:absolute;
   bottom: 0px;
   vertical-align: center;
+  text-align: center;
 }
 
 .dongtai-title{
   color: white;
   font-size: 18px;
   font-family: "Microsoft YaHei";
-  padding-left: 20px;
+  line-height: 50px;
+  width: 100%;
 }
 
 .active{

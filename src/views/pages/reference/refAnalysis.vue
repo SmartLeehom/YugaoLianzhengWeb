@@ -9,13 +9,13 @@
       </div>
 
       <span class="query-title">项目名称</span>
-      <el-select v-model="selectedProject" style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索" filterable >
+      <el-select v-model="selectedProject" clearable style="width:180px; margin-right: 15px" @change="projectChanges" placeholder="请选择或输入搜索" filterable >
         <el-option v-for="item in projects" :key="item.key" :label="item.value" :value="item.key"> </el-option>
       </el-select>
 
       <span class="query-title">部门名称</span>
-      <el-select v-model="selectedDept" style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择或输入搜索" filterable >
-        <el-option v-for="item in depts" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+      <el-select v-model="selectedDept" clearable style="width:180px; margin-right: 15px" @change="deptChanges" placeholder="请选择或输入搜索" filterable >
+        <el-option v-for="item in depts" :key="item.fid" :label="item.fname" :value="item.fid"> </el-option>
       </el-select>
 
       <el-button type="danger" class="submit-btn" style="margin-left: 10px" @click="queryList()">查询</el-button>
@@ -113,18 +113,33 @@
                 this.amount = 8;
             },
             getDepts(){
-                this.depts=[
+                this.$api.get('org/list',null,res=>{
+                    this.depts=res.data
+                })
+
+                /*this.depts=[
                     {key: 1, value: "一部"},
                     {key: 2, value: "二部"},
                     {key: 3, value: "三部"},
-                ]
+                ]*/
             },
             getProjects(){
-                this.projects=[
+                /*this.projects=[
                     {key: 1, value: "项目1"},
                     {key: 2, value: "项目2"},
                     {key: 3, value: "项目3"},
-                ]
+                ]*/
+                this.$api.get('project/list',null, res=>{
+                    if(res.code.toString() != '0'){
+                        this.$message('项目数据查询失败')
+                        return;
+                    }
+
+                    this.projects=[];
+                    for(let i=0; i<res.data.length; i++){
+                        this.projects.push({key: res.data[i].sysProjectId, value: res.data[i].name})
+                    }
+                })
             },
             projectChanges(val){
                 // val为key

@@ -67,7 +67,7 @@
                 iframeUrl: '',
                 logo: require('../../assets/img/logo.png'),
                 userLogo: require('../../assets/img/userlogo.jpg'),
-                activeIndex: 'home',
+                activeIndex: '',
                 userName: "管理员",
                 logoutPopover: false,
             }
@@ -80,7 +80,7 @@
                 this.listenRoute(to.name)
             }
         },
-        mounted() {
+        beforeMount(){
             let token = this.getUrlKey('code')
 
             if(token){
@@ -98,12 +98,18 @@
                     this.userName = user.userName
                     location.href = location.href.split('?')[0]
 
+                    this.activeIndex = 'home'
                 })
             }
             else{
                 this.userName = sessionStorage.getItem('userName')
                 location.href = location.href.split('?')[0]
+
+                this.activeIndex = 'home'
             }
+        },
+        mounted() {
+
         },
         methods: {
             handleSelect(key, keyPath) {

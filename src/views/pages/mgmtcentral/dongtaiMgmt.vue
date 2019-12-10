@@ -360,8 +360,6 @@
                 let param = new FormData(); //创建form对象
                 param.append('file',data.file);
 
-                console.log(data.file);
-
                 this.$api.post('file/upload',param, res=>{
                     console.log(res.data);
                     let filedata = res.data;
@@ -371,6 +369,8 @@
                     else{
                         this.imgRes=filedata
                     }
+
+                    this.$message('上传成功')
 
                     return false;
                 })
@@ -407,6 +407,7 @@
                             return;
                         }
 
+                        this.$message('保存成功')
                         this.getData()
                         this.closeDialog();
                     })
@@ -426,6 +427,7 @@
                             return;
                         }
 
+                        this.$message('保存成功')
                         this.getData()
                         this.closeDialog();
                     })

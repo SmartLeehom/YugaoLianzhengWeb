@@ -65,6 +65,7 @@
 
 <script>
     import baseUrl from "../../../utils/baseUrl";
+    import utils from "../../../utils/utils";
     export default {
         name: "refDetail",
         data(){
@@ -120,7 +121,7 @@
             },
             projectChanges(val){
                 // val为key
-                console.log(val);
+                //console.log(val);
                 this.selectedProject = val;
             },
             reftypeChanges(val){
@@ -166,7 +167,7 @@
                 }
 
                 // 保存
-                let projectDetail = this.projects.find(item=>item.sysProjectId.toString() == this.selectedProject.toString());
+                let projectDetail = this.projects.find(item=>item.key.toString() == this.selectedProject.toString());
                 let isNewAdded = true;
 
                 let data = null;
@@ -210,8 +211,10 @@
                     }
 
                     // 如果是新增的数据，还需要新增待办事项给 固定人员+项目负责人
+                    console.log(isNewAdded)
                     if(isNewAdded){
                         let userIds = utils.SupervisionIds;
+                        console.log(userIds)
 
                         // 获取项目负责人
                         // 。。待完成
@@ -242,19 +245,19 @@
                                 if(res.code.toString() != "0"){
                                     this.$message("廉政资料上传成功，生成待阅事项异常，请联系管理员处理")
                                     this.clear()
-                                    history.go(this.returnBack);
+                                    history.go(-1);
                                 }
 
                                 this.$message("保存成功")
                                 this.clear()
-                                history.go(this.returnBack);
+                                history.go(-1);
                             })
                         })
                     }
                     else{
                         this.$message("保存成功")
                         this.clear();
-                        history.go(this.returnBack);
+                        history.go(-1);
                     }
                 })
             },
@@ -294,7 +297,7 @@
                     this.fileRes.push(filedata);
 
                     this.fileMap[data.file.uid] = filedata.lianzhengFileId;
-
+                    this.$message("上传成功")
                     return false;
                 })
             },

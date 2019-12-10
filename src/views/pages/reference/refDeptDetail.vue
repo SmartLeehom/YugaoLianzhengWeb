@@ -316,6 +316,7 @@
 
                     this.fileMap[data.file.uid] = filedata.lianzhengFileId;
 
+                    this.$message("上传成功")
                     return false;
                 })
             },

@@ -6,12 +6,12 @@
 
     <div class="reference-department-query">
       <span class="query-title">部门</span>
-      <el-select v-model="depts.key" style="width:180px; margin-right: 15px" filterable @change="deptChanges" placeholder="请选择或输入搜索">
+      <el-select v-model="depts.key" clearable style="width:180px; margin-right: 15px" filterable @change="deptChanges" placeholder="请选择或输入搜索">
         <el-option v-for="item in depts" :key="item.fid" :label="item.fname" :value="item.fid"> </el-option>
       </el-select>
 
       <span class="query-title">资料类型</span>
-      <el-select v-model="refTypes.key" style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
+      <el-select v-model="refTypes.key" clearable style="width:180px; margin-right: 15px" @change="reftypeChanges" placeholder="请选择">
         <el-option v-for="item in refTypes" :key="item.lianzhengReferenceFileTypeId" :label="item.name" :value="item.lianzhengReferenceFileTypeId"> </el-option>
       </el-select>
 
@@ -125,8 +125,18 @@
             },
 
             queryRefList(){
-                console.log(this.selectedDept + '--' + this.selectedReftype + '--' + this.keyPattern);
-                this.$api.get('reference/findList?type=1&page='+this.pageIndex+'&referenceType='+this.selectedReftype+'&size='+this.pageSize+'&pattern='+this.keyPattern,null,res=>{
+                let apiUrl = 'reference/findList?type=1&page='+this.pageIndex+'&size='+this.pageSize;
+                if(this.selectedReftype){
+                    apiUrl += '&referenceType='+this.selectedReftype;
+                }
+                if(this.keyPattern){
+                    apiUrl += '&pattern='+this.keyPattern;
+                }
+                if(this.selectedDept){
+                    apiUrl += '&department='+this.selectedDept;
+                }
+
+                this.$api.get(apiUrl, null, res=>{
                   this.refData=res.list;
                   for(let i=0; i<this.refData.length; i++){
                       if(this.refData[i].referenceType.toString() == "1"){
@@ -188,6 +198,7 @@
             },
             deleteRef(id){
                 this.$api.post('reference/delete?id='+id,null,res=>{
+                    this.$message('删除成功')
                     this.queryRefList();
               })
             },
